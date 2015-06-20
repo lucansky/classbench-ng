@@ -1,21 +1,31 @@
-class TrieNode
+class TierNode
 	attr_accessor :level           # depth of node
 	attr_accessor :prefixes_count  # number of occurences of the prefix
 
-	# 0-subtree-related members
-	attr_accessor :zero_subtree    # subtree
-	attr_accessor :zero_weight     # number of prefixes in the subtree
-
-	# 1-subtree-related members
-	attr_accessor :one_subtree     # subtree
-	attr_accessor :one_weight      # number of prefixes in the subtree
+	attr_accessor :subtree # Hash mapping character -> TierNode
+	attr_accessor :subtree_weights
 
 	def initialize(level)
 		self.prefixes_count = 0
-		
-		self.zero_weight = 0
-		self.one_weight = 0
+
+		self.subtree = {}
+		self.subtree_weights = {}
 
 		self.level = level
+	end
+
+	def compute_weights
+		weight = 0
+
+		subtree.each do |char, st|
+			self.subtree_weights[char] = st.compute_weights
+			weight += self.subtree_weights[char]
+		end
+
+		weight += self.prefixes_count
+	end
+
+	def increment_prefixes
+		self.prefixes_count += 1
 	end
 end
