@@ -1,8 +1,8 @@
-class TierNode
+class TrieNode
 	attr_accessor :level           # depth of node
 	attr_accessor :prefixes_count  # number of occurences of the prefix
 
-	attr_accessor :subtree # Hash mapping character -> TierNode
+	attr_accessor :subtree # Hash mapping character -> TrieNode
 	attr_accessor :subtree_weights
 
 	def initialize(level)
