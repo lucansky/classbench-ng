@@ -4,7 +4,7 @@ module Classbench
 	#
 	# Array members store statistics defined separately for each level of the
 	# trie. Prefix nesting is defined for the whole trie.
-	Struct.new("classbench_stats",
+	Struct.new("ClassbenchStats",
 					# (float[]) number of prefixes (not prefix nodes) with given length
 					:prefix_lengths,
 					# (float[]) probability of node with only one child (from all non-leaf nodes),
@@ -20,7 +20,7 @@ module Classbench
 	# Structure representing statistics related to trie nodes.
 	#
 	# All the statistics are stored separately for each level of the trie.
-	Struct.new("node_stats",
+	Struct.new("NodeStats",
 				:leaf,          # (int[]) number of leaf nodes
 				:one_child,     # (int[]) number of nodes with one child only
 				:two_children,  # (int[]) number of nodes with both children
@@ -34,7 +34,7 @@ module Classbench
 	#    1) statistics proposed in ClassBench tool and
 	#    2) statistics related to trie nodes.
 	#
-	Struct.new("trie_stats", :classbench_stats, :node_stats)
+	Struct.new("TrieStats", :classbench_stats, :node_stats)
 
 	# Class for representation of a n-ary prefix tree - trie.
 	class Trie
