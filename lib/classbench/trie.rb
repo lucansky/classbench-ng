@@ -60,7 +60,7 @@ module Classbench
 				next_node = current_node.subtree[ch]
 
 				if next_node.nil?
-					next_node = TierNode.new(i+1)
+					next_node = TrieNode.new(i+1)
 					current_node.subtree[ch] = next_node
 				end
 
