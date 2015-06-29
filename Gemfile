@@ -11,3 +11,4 @@ group :development do
 end
 
 gem "docopt"
+gem "ruby-ip"
