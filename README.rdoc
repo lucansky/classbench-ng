@@ -1,3 +1,10 @@
 == Classbench
 
-Utility for generation of firewall/OpenFlow rules based on original [(no longer maintained) Classbench](http://www.arl.wustl.edu/classbench/).
+Utility for generation of firewall/OpenFlow rules based on original {(no longer maintained) Classbench}[http://www.arl.wustl.edu/classbench/].
+
+=== Requirements
+* Ruby 1.9.3+
+* RubyGems
+
+=== Installation
+  gem install classbench

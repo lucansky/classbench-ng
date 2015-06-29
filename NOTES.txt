@@ -1,0 +1,26 @@
+1. Extract parameters from the original set and write them into a
+seed file in a ClassBench-like format (i.e. ClassBench can understand this
+format but the file also contains statistics not relevant for ClassBench).
+Parser should be able to extract parameters from rule sets in an OpenFlow
+format, other formats are not necessary. Extracted parameters are as follow:
+   1. original ClassBench parameters
+   2. probabilities for different rule types (rules with no
+   OF-defined header fields are omitted)
+   3. parameters for generation of OF-specific header fields
+      1. ingress port
+      2. vendor part of MAC addresses
+      3. Ethernet type
+      4. 3 leftmost bits of IP TOS/DSCP
+    2. Use ClassBench for generation of the given number of rules.
+Each rule will containing all 5-tuple header fields (this is ClassBench's
+feature).
+3. For each generated rule
+   1. determine its OF type
+   2. remove 5-tuple header fields that ARE NOT defined by the OF type
+   3. add OF-specific header fields that ARE defined by the OF type
+      1. if the field is ingress port, Ethernet type or IP protocol,
+      use specified dependencies (see shared Google document) to constrain a set
+      of possible values for this field
+      2. generate value for the OF-specific header field in a
+      specified way (see shared Google document)
+    4. Label all the header fields by the corresponding OF name

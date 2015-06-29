@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+# Library loader
+if File.exists?("../lib/classbench.rb")
+	load("../lib/classbench.rb") # Devel
+	STDERR.puts "Loading development library..."
+else
+	require "classbench" # Live
+end
+
+require "pp"
+require "docopt"
+doc = <<DOCOPT
+Classbench utility
+  Firewall/openflow rule generator.
+
+Usage:
+  #{__FILE__} analyse openflow FILE
+  #{__FILE__} -h | --help
+  #{__FILE__} --version
+
+Options:
+  -h --help          Show this screen.
+  --version          Show version.
+
+DOCOPT
+
+begin
+	opts = Docopt::docopt(doc)
+	if opts["analyse"]
+		if opts["openflow"]
+			Classbench::analyse(opts["FILE"])
+		else # prefixes
+			raise "Not implemented yet."
+		end
+	end
+	# TODO: --version
+
+rescue Docopt::Exit => e
+	STDERR.puts e.message
+end

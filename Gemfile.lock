@@ -5,6 +5,7 @@ GEM
     builder (3.2.2)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    docopt (0.5.0)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     git (1.2.9.1)
@@ -50,5 +51,6 @@ PLATFORMS
 
 DEPENDENCIES
   bundler
+  docopt
   jeweler
   rdoc

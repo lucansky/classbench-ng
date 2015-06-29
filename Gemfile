@@ -9,3 +9,5 @@ group :development do
   gem "jeweler" #, "~> 2.0", '>= 2.0.1'
   # gem "simplecov"
 end
+
+gem "docopt"

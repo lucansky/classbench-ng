@@ -28,4 +28,12 @@ class TrieNode
 	def increment_prefixes
 		self.prefixes_count += 1
 	end
+
+	def zero_weight
+		subtree_weights["0"]
+	end
+
+	def one_weight
+		subtree_weights["1"]
+	end
 end
