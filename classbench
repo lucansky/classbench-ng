@@ -1,0 +1,47 @@
+#!/usr/bin/env ruby
+
+require_relative "lib/classbench"
+
+require "pp"
+require "docopt"
+doc = <<DOCOPT
+Classbench utility
+  Firewall/openflow rule generator.
+
+Usage:
+  #{__FILE__} analyse FILE
+  #{__FILE__} generate <seed> [--count=100]
+  #{__FILE__} -h | --help
+  #{__FILE__} --version
+
+Options:
+  -h --help          Show this screen.
+  --version          Show version.
+
+Analyser accept's as input ovs-ofctl dump.
+Fields extracted from dump are:
+	- dl_dst, dl_src, dl_type, dl_vlan, dl_vlan_pcp,
+	- eth_type, in_port,
+	- nw_dst, nw_proto, nw_src, nw_tos,
+	- tp_dst, tp_src
+Output is original Classbench seed
+	with openflow YAML structure as last section.
+
+Generator accept's Classbench seed with openflow section.
+Output's one rule per line in format "attribute=value", joined by ", ".
+
+DOCOPT
+
+begin
+	opts = Docopt::docopt(doc)
+	if opts["analyse"]
+		Classbench::analyse(opts["FILE"])
+	elsif opts["generate"]
+		#pp opts
+		Classbench::generate(opts["<seed>"], (opts["--count"] ? opts["--count"].to_i : 100))
+	end
+	# TODO: --version
+
+rescue Docopt::Exit => e
+	STDERR.puts e.message
+end
