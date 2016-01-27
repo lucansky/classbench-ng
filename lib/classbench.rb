@@ -9,6 +9,8 @@ require 'ip' # ruby-ip gem
 require 'pp'
 
 module Classbench
+	VERSION = '0.1.2'
+
 	def self.generate_prefix
 		len = rand(33)
 
@@ -41,12 +43,17 @@ module Classbench
 		#100.times { p analyser.generate_rule }
 	end
 
-	def self.generate(filename, count)
-		generator = Generator.new(filename)
-		generator.parse_seed
+	def self.generate(filename, count, db_generator_path)
+		generator = Generator.new(filename, db_generator_path)
+		has_openflow = generator.parse_seed
 
 		#puts  YAML.dump(generator.openflow_section)
-		puts generator.generate_rules(count).map(&:to_vswitch_format)
+		rules = generator.generate_rules(count)
+		if has_openflow
+			rules.map!(&:to_vswitch_format)
+		end
+
+		puts rules
 	end
 
 end

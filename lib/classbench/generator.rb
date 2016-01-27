@@ -12,6 +12,8 @@ module Classbench
 		# Full path to seed, needs to be stored for later generation
 		attr_accessor :seed_path
 
+		attr_accessor :raw_rules
+
 		# Array of arrays containing footprint for OpenFlow rule,
 		# as if they were from original set, but without values
 		# Ex: [["tp_dst"], ["nw_src", "nw_dst"]
@@ -19,10 +21,15 @@ module Classbench
 
 		attr_accessor :pregenerated_dl_srcs
 		attr_accessor :pregenerated_dl_dsts
+		attr_accessor :pregenerated_in_ports
+		attr_accessor :pregenerated_eth_types
 
-		def initialize(filename)
+		attr_accessor :db_generator_path
+
+		def initialize(filename, db_generator_path)
 			self.seed_path = filename
 			self.classbench_rules = []
+			self.db_generator_path = db_generator_path
 		end
 
 		def parse_seed
@@ -33,11 +40,17 @@ module Classbench
 
 				pregenerate_rule_types
 				pregenerate_dl
+				pregenerate_in_ports
+				pregenerate_eth_types
 
-				#p pregenerated_rule_types.count
+				#p self.openflow_section
+
 			rescue NoMethodError
 				STDERR.puts "No openflow section found in seed."
+				return false
 			end
+
+			true
 		end
 
 		##########################
@@ -51,6 +64,8 @@ module Classbench
 				end
 			end
 		end
+
+		# TODO: Refactor, nasty repetition. Probably will make it unclear.
 
 		def pregenerate_dl
 			self.pregenerated_dl_srcs = []
@@ -68,6 +83,24 @@ module Classbench
 			end
 		end
 
+		def pregenerate_in_ports
+			self.pregenerated_in_ports = []
+			self.openflow_section["in_port"].each do |port, count|
+				count.to_i.times do
+					self.pregenerated_in_ports << port
+				end
+			end
+		end
+
+		def pregenerate_eth_types
+			self.pregenerated_eth_types = []
+			self.openflow_section["eth_type"].each do |eth_type, count|
+				count.to_i.times do
+					self.pregenerated_eth_types << eth_type
+				end
+			end
+		end
+
 		##########################
 		def generate_classbench_rules(count)
 			current_dir = File.dirname(__FILE__)
@@ -76,30 +109,45 @@ module Classbench
 			# db_generator -c filename #{count} 0 0 0 tmp/#{rand}
 			# Call classbench
 			#system(current_dir+"/db_generator", "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path, " > /dev/null")
-			pid, stdin, stdout, stderr = Open4::popen4(current_dir+"/db_generator", "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path)
+			puts [self.db_generator_path, "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path].join(' ')
+			pid, stdin, stdout, stderr = Open4::popen4(self.db_generator_path, "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path)
 			ignored, status = Process::waitpid2 pid
 
+			#STDERR.puts "done"
 			#puts status
 			#puts $?
 
-			raw_rules = File.readlines(tmp_filters.path)
-			raw_rules.each do |classbench_line|
+			self.raw_rules = File.readlines(tmp_filters.path)
+			self.raw_rules.each do |classbench_line|
 				self.classbench_rules << Rule.from_classbench_format(classbench_line)
 			end
+
+			return raw_rules
 		end
 
 		def generate_rules(count)
 			generate_classbench_rules(count)
-			all_generated_rules = []
+
+			if not self.openflow_section
+				return self.raw_rules
+			end
 
 			return classbench_rules.map do |rule|
 				random_openflow_type = pregenerated_rule_types.sample
 				rule.remove_missing_attributes(random_openflow_type)
 
+				p random_openflow_type
 				random_openflow_type.each do |attribute|
-					p random_openflow_type
 					if not rule.attributes.include?(attribute)
 						#puts "Fill #{attribute}"
+
+						if attribute == "in_port"
+							rule.attributes["in_port"] = pregenerated_in_ports.sample
+						end
+
+						if attribute == "eth_type"
+							rule.attributes["eth_type"] = pregenerated_eth_types.sample
+						end
 
 						random_device_mac = (1..3).collect { "%02x" % [rand(255)] }.join(":")
 						if attribute == "dl_dst"
@@ -115,12 +163,16 @@ module Classbench
 						if attribute == "dl_vlan"
 							rule.attributes["dl_vlan"] = rand(4096)
 						end
+
+						if not ["in_port", "eth_type", "dl_dst", "dl_src", "dl_vlan"].include?(attribute)
+							STDERR.puts "Warning: attribute #{attribute} not covered in generation process"
+							exit
+						end
+
 					end
 				end
 
 				rule
-				#p random_openflow_type
-				#puts
 			end
 		end
 	end

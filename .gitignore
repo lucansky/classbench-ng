@@ -20,3 +20,6 @@ pkg
 other
 resources
 NOTES*
+.idea
+.DS_Store
+vendor/db_generator

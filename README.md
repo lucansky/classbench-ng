@@ -12,6 +12,7 @@ gem install open4 ruby-ip docopt
 ## Installation
 ```
 git clone git://github.com/classbench-ng/classbench-ng
+make   # Downloads and compiles db_generator in ./vendor/db_generator/db_generator
 ```
 
 ## Usage
@@ -28,8 +29,9 @@ Fields extracted from dump are:
 Output's original Classbench seed with openflow YAML structure as last section.
 
 ```
-./classbench generate SEED [--count=100]
+./classbench generate v4 SEED [--count=100] [--db-generator=<path>]
 ```
-Generator accept's Classbench seed with openflow section.
+Generates --count of OpenFlow rules.
+If seed without OpenFlow section is provided, regular 5-tuples are generated.
 Output format is "attribute=value", joined by ", ".
 

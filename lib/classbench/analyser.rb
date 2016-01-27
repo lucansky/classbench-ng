@@ -3,10 +3,7 @@ require "yaml"
 
 module Classbench
 	class Analyser
-		INTERESTING_ATTRIBUTES = ["dl_dst", "dl_src", "dl_type", "dl_vlan", "dl_vlan_pcp",
-									"eth_type", "in_port",
-									"nw_dst", "nw_proto", "nw_src", "nw_tos",
-									"tp_dst", "tp_src"]
+		INTERESTING_ATTRIBUTES = %w(dl_dst dl_src dl_type dl_vlan dl_vlan_pcp eth_type in_port nw_dst nw_proto nw_src nw_tos tp_dst tp_src)
 
 		attr_accessor :rules
 		attr_accessor :protocol_port_class_stats
@@ -156,6 +153,7 @@ module Classbench
 		# TODO: MAC
 		def openflow_stats
 			{"in_port" => in_ports,
+			 "eth_type" => eth_types,
 				"dl_src" => vendors("src"),
 				"dl_dst" => vendors("dst"),
 				"rule_counts" => occurences_of_rule_types}
@@ -171,6 +169,11 @@ module Classbench
 		def in_ports
 			ports = rules.map {|r| r.attributes["in_port"]}.compact
 			ports.each_with_object(Hash.new(0)) { |port,counts| counts[port] += 1 }
+		end
+
+		def eth_types
+			eth_types = rules.map {|r| r.attributes["eth_type"]}.compact
+			eth_types.each_with_object(Hash.new(0)) { |eth_type,counts| counts[eth_type] += 1 }
 		end
 
 		def occurences_of_rule_types

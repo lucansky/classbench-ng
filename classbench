@@ -10,17 +10,19 @@ Classbench utility
 
 Usage:
   #{__FILE__} analyse FILE
-  #{__FILE__} generate <seed> [--count=100]
+  #{__FILE__} generate v4 <seed> [--count=<n>] [--db-generator=<path>]
+  #{__FILE__} generate v6 <seed> [--count=<n>]
   #{__FILE__} -h | --help
-  #{__FILE__} --version
+  #{__FILE__} version
 
 Options:
-  -h --help          Show this screen.
-  --version          Show version.
+  --db-generator=<path>     Path to binary of original db_generator [default: ./vendor/db_generator/db_generator]
+  --count=<n>               Count of rules to generate [default: 100]
+  -h --help                 Show this screen.
 
 Analyser accept's as input ovs-ofctl dump.
 Fields extracted from dump are:
-	- dl_dst, dl_src, dl_type, dl_vlan, dl_vlan_pcp,
+	- dl_dst, dl_src, dl_type, (dl_vlan, dl_vlan_pcp,)
 	- eth_type, in_port,
 	- nw_dst, nw_proto, nw_src, nw_tos,
 	- tp_dst, tp_src
@@ -38,8 +40,10 @@ begin
 		Classbench::analyse(opts["FILE"])
 	elsif opts["generate"]
 		#pp opts
-		Classbench::generate(opts["<seed>"], (opts["--count"] ? opts["--count"].to_i : 100))
-	end
+		Classbench::generate(opts["<seed>"], (opts["--count"].to_i), opts["--db-generator"])
+	elsif opts["version"]
+		puts "Version: #{Classbench::VERSION}"
+  end
 	# TODO: --version
 
 rescue Docopt::Exit => e
