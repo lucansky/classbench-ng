@@ -109,7 +109,6 @@ module Classbench
 			# db_generator -c filename #{count} 0 0 0 tmp/#{rand}
 			# Call classbench
 			#system(current_dir+"/db_generator", "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path, " > /dev/null")
-			puts [self.db_generator_path, "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path].join(' ')
 			pid, stdin, stdout, stderr = Open4::popen4(self.db_generator_path, "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path)
 			ignored, status = Process::waitpid2 pid
 
@@ -136,7 +135,7 @@ module Classbench
 				random_openflow_type = pregenerated_rule_types.sample
 				rule.remove_missing_attributes(random_openflow_type)
 
-				p random_openflow_type
+				#p random_openflow_type
 				random_openflow_type.each do |attribute|
 					if not rule.attributes.include?(attribute)
 						#puts "Fill #{attribute}"

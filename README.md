@@ -12,8 +12,13 @@ gem install open4 ruby-ip docopt
 ## Installation
 ```
 git clone git://github.com/classbench-ng/classbench-ng
-make   # Downloads and compiles db_generator in ./vendor/db_generator/db_generator
+make   # Downloads, patches and compiles db_generator in ./vendor/db_generator/db_generator
 ```
+
+### Patching classbench
+Due to statically initialized arrays in ClassBench, patching is required which increases the limit.
+Patch is automatically applied by make in process of downloading ClassBench.
+(see vendor/Makefile)
 
 ## Usage
 ```
