@@ -11,7 +11,7 @@ sudo gem install open4 ruby-ip docopt
 ```
 ## Installation
 ```
-git clone git://github.com/classbench-ng/classbench-ng
+git clone https://github.com/lucansky/classbench-ng.git
 make   # Downloads, patches and compiles db_generator in ./vendor/db_generator/db_generator
 ```
 
