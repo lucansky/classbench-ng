@@ -4,7 +4,7 @@ all: compile
 
 download:
 	# Make backup of db_generator if exists
-	[ -d db_generator ] && mv db_generator db_generator-$(shell date --rfc-3339=seconds | tr ' ' '_')
+	-[ -d db_generator ] && mv db_generator db_generator-$(shell date --rfc-3339=seconds | tr ' ' '_')
 
 	# Download and unpack ClassBench
 	wget -O- -q http://www.arl.wustl.edu/classbench/db_generator.tar.gz | tar -xvz
