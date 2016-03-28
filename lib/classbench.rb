@@ -35,12 +35,11 @@ module Classbench
 	def self.analyse(filename)
 		analyser = Analyser.new
 		analyser.parse_openflow(File.read(filename))
-		#pp analyser.rules
+
 		analyser.calculate_stats
-		#analyser.protocol_stats
+
 		puts analyser.generate_seed
-		#p analyser.protocol_port_class_stats
-		#100.times { p analyser.generate_rule }
+
 	end
 
 	def self.generate(filename, count, db_generator_path)

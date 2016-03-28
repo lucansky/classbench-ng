@@ -1,3 +1,5 @@
+require 'ipaddress'
+
 module Classbench
 	class Rule
 		CLASSBENCH_FORMAT = /^@(?<src_ip>.*)\/(?<src_ip_prefix>\d+)\t(?<dst_ip>.*)\/(?<dst_ip_prefix>\d+)\t(?<src_port_from>\d+) : (?<src_port_to>\d+)\t(?<dst_port_from>\d+) : (?<dst_port_to>\d+)\t(?<proto>0x[0-9a-f]+?)\/(.*)\t?$/
@@ -27,6 +29,14 @@ module Classbench
 			r.attributes["tp_dst"] = dst_port_range
 
 			return r
+		end
+
+		def src_length
+			IPAddress.parse(attributes["nw_src"] || '0.0.0.0').prefix.to_i
+		end
+
+		def dst_length
+			IPAddress.parse(attributes["nw_dst"] || '0.0.0.0').prefix.to_i
 		end
 
 		def remove_missing_attributes(attrs)

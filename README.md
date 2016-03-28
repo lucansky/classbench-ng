@@ -7,7 +7,7 @@ Utility for generation of firewall/OpenFlow rules based on original (no longer m
 - RubyGems
 
 ```
-sudo gem install open4 ruby-ip docopt
+sudo gem install open4 ruby-ip docopt ipaddress
 ```
 ## Installation
 ```
