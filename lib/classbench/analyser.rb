@@ -3,7 +3,7 @@ require "yaml"
 
 module Classbench
 	class Analyser
-		INTERESTING_ATTRIBUTES = %w(dl_dst dl_src dl_type dl_vlan dl_vlan_pcp eth_type in_port nw_dst nw_proto nw_src nw_tos tp_dst tp_src)
+		INTERESTING_ATTRIBUTES = %w(dl_dst dl_src dl_type dl_vlan dl_pcp eth_type in_port nw_dst nw_proto nw_src nw_tos tp_dst tp_src)
 
 		attr_accessor :rules
 		attr_accessor :protocol_port_class_stats

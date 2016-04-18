@@ -179,11 +179,11 @@ module Classbench
 							rule.attributes["nw_tos"] = nw_tos_values.sample
 						end
 
-						if attribute == "dl_vlan_pcp"
-							rule.attributes["dl_vlan_pcp"] = rand(8)
+						if attribute == "dl_pcp"
+							rule.attributes["dl_pcp"] = rand(8)
 						end
 
-						if not ["in_port", "eth_type", "dl_dst", "dl_src", "dl_vlan", "nw_tos", "dl_vlan_pcp"].include?(attribute)
+						if not ["in_port", "eth_type", "dl_dst", "dl_src", "dl_vlan", "nw_tos", "dl_pcp"].include?(attribute)
 							STDERR.puts "Error: attribute #{attribute} not covered in generation process"
 							exit 1
 						end
