@@ -26,10 +26,21 @@ module Classbench
 
 		attr_accessor :db_generator_path
 
+		# All possible values in field nw_tos from DSCP Pool 1
+		# https://www.iana.org/assignments/dscp-registry/dscp-registry.xhtml
+		attr_accessor :nw_tos_values
+
+		# Pregenerated possible VLAN values. First are [10,20,30..4090], followed by all other vlan IDs.
+		# If seed contains 4 unique vlan IDs, then only IDs 10, 20, 30 or 40 will be used in generated rules.
+		attr_accessor :vlan_pool
+
 		def initialize(filename, db_generator_path)
 			self.seed_path = filename
 			self.classbench_rules = []
 			self.db_generator_path = db_generator_path
+
+			self.nw_tos_values = [0, 8, 16, 24, 32, 40, 48, 56, 10, 12, 14, 18, 20, 22, 26, 28, 30, 34, 36, 38, 46, 46]
+			self.vlan_pool = ( (1..4094).select {|x,y| x % 10 == 0 } + (1..4094).to_a ).uniq
 		end
 
 		def parse_seed
@@ -58,7 +69,7 @@ module Classbench
 		def pregenerate_rule_types
 			self.pregenerated_rule_types = []
 
-			self.openflow_section["rule_counts"].each do |rule_count|
+			self.openflow_section["rule_distribution"].each do |rule_count|
 				rule_count["count"].times do
 					self.pregenerated_rule_types << rule_count["attributes"]
 				end
@@ -160,12 +171,21 @@ module Classbench
 						end
 
 						if attribute == "dl_vlan"
-							rule.attributes["dl_vlan"] = rand(4096)
+							random_vlan_id_position = rand(self.openflow_section["unique_vlan_ids_count"].to_i)
+							rule.attributes["dl_vlan"] = self.vlan_pool[random_vlan_id_position]
 						end
 
-						if not ["in_port", "eth_type", "dl_dst", "dl_src", "dl_vlan"].include?(attribute)
-							STDERR.puts "Warning: attribute #{attribute} not covered in generation process"
-							exit
+						if attribute == "nw_tos"
+							rule.attributes["nw_tos"] = nw_tos_values.sample
+						end
+
+						if attribute == "dl_vlan_pcp"
+							rule.attributes["dl_vlan_pcp"] = rand(8)
+						end
+
+						if not ["in_port", "eth_type", "dl_dst", "dl_src", "dl_vlan", "nw_tos", "dl_vlan_pcp"].include?(attribute)
+							STDERR.puts "Error: attribute #{attribute} not covered in generation process"
+							exit 1
 						end
 
 					end

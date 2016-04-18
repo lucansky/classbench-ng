@@ -8,9 +8,11 @@ module Classbench
 		attr_accessor :rules
 		attr_accessor :protocol_port_class_stats
 		attr_accessor :port_class_prefix_lengths
+		attr_accessor :omitted_rules_count
 
 		def initialize
 			self.rules ||= []
+			self.omitted_rules_count = 0
 		end
 
 		def parse_openflow(lines)
@@ -19,7 +21,10 @@ module Classbench
 				attributes = line.scan(/([a-z_\-]+)=([A-Za-z0-9\-_:\.\/]+)(,|\w)?/).
 									keep_if {|a| INTERESTING_ATTRIBUTES.include?(a.first) }
 
-				next if attributes.empty?
+				if attributes.empty?
+					self.omitted_rules_count += 1
+					next
+				end
 
 				rule = {}
 				attributes.each do |attr|
@@ -190,9 +195,11 @@ module Classbench
 		def openflow_stats
 			{"in_port" => in_ports,
 			 "eth_type" => eth_types,
-				"dl_src" => vendors("src"),
-				"dl_dst" => vendors("dst"),
-				"rule_counts" => occurences_of_rule_types}
+			 "dl_src" => vendors("src"),
+			 "dl_dst" => vendors("dst"),
+			 "unique_vlan_ids_count" => unique_vlans_count,
+			 "empty_rules_count" => omitted_rules_count,
+			 "rule_distribution" => occurences_of_rule_types}
 		end
 
 		# Returns hash with keys MAC address (only vendor part) and values as count
@@ -210,6 +217,10 @@ module Classbench
 		def eth_types
 			eth_types = rules.map {|r| r.attributes["eth_type"]}.compact
 			eth_types.each_with_object(Hash.new(0)) { |eth_type,counts| counts[eth_type] += 1 }
+		end
+
+		def unique_vlans_count
+			rules.map {|r| r.attributes["dl_vlan"]}.compact.uniq.count
 		end
 
 		def occurences_of_rule_types

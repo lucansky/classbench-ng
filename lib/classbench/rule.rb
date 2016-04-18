@@ -100,7 +100,10 @@ module Classbench
 		end
 
 		def to_vswitch_format
-			attributes.to_a.map { |k,v| "#{k}=#{v}" }.join(", ")
+			attributes.to_a.
+				reject {|k,v| v == (0..65535)}.  # tp_src and tp_dst is removed when wildcard
+				map {|k,v| (v.is_a?(Range) and v.first == v.last) ? [k, v.first] : [k,v] }. # if port range is [x..x] => x
+				map {|k,v| "#{k}=#{v}" }.join(", ") # Openflow format
 		end
 
 	end
