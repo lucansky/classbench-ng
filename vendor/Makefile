@@ -1,13 +1,22 @@
 # Compilation of classbench
 
+# Potential backup time
+BACKUP_TIME=$(shell date --rfc-3339=seconds | tr ' ' '_')
+
 all: compile
 
 download:
-	# Make backup of db_generator if exists
-	-[ -d db_generator ] && mv db_generator db_generator-$(shell date --rfc-3339=seconds | tr ' ' '_')
+	# Make backup of db_generator, if exists
+	-[ -d db_generator ] && mv db_generator db_generator-$(BACKUP_TIME)
 
 	# Download and unpack ClassBench
 	wget -O- -q http://www.arl.wustl.edu/classbench/db_generator.tar.gz | tar -xvz
+
+	# Make backup of parameter_files, if exists
+	-[ -d parameter_files ] && mv parameter_files parameter_files-$(BACKUP_TIME)
+
+	# Download and unpack ClassBench
+	wget -O- -q http://www.arl.wustl.edu/classbench/parameter_files.tar.gz | tar -xvz
 
 patch: download
 	# Apply patches from ../patches

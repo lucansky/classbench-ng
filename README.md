@@ -11,10 +11,12 @@ Format of the generated rules can be one of the following:
 ```
 sudo gem install open4 ruby-ip docopt ipaddress
 ```
+
 ## Installation
 ```
 git clone https://github.com/classbench-ng/classbench-ng.git
-make   # Downloads, patches and compiles db_generator in ./vendor/db_generator
+make   # Downloads, patches and compiles original ClassBench in ./vendor/db_generator
+       # Downloads parameter files of original ClassBench to ./vendor/parameter_files
 ```
 
 ### Patching ClassBench
