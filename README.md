@@ -1,42 +1,58 @@
-# Classbench
-
-Utility for generation of firewall/OpenFlow rules based on original (no longer maintained) [Classbench](http://www.arl.wustl.edu/classbench/).
+# ClassBench-ng
+A tool for generation of synthetic classification rule sets for benchmarking, which is based on original (no longer maintained) [ClassBench](http://www.arl.wustl.edu/classbench/).
+Format of the generated rules can be one of the following:
+- IPv4 5-tuple
+- IPv6 5-tuple
+- OpenFlow
 
 ## Requirements
 - Ruby 1.9.3+
 - RubyGems
-
 ```
 sudo gem install open4 ruby-ip docopt ipaddress
 ```
 ## Installation
 ```
-git clone https://github.com/lucansky/classbench-ng.git
-make   # Downloads, patches and compiles db_generator in ./vendor/db_generator/db_generator
+git clone https://github.com/classbench-ng/classbench-ng.git
+make   # Downloads, patches and compiles db_generator in ./vendor/db_generator
 ```
 
-### Patching classbench
-Due to statically initialized arrays in ClassBench, patching is required which increases the limit.
-Patch is automatically applied by make in process of downloading ClassBench.
-(see vendor/Makefile)
+### Patching ClassBench
+Original ClassBench is improved using patches in `./patches` directory and the size of its statically initialized arrays is increased, where necessary.
+These changes are automatically applied on downloaded ClassBench during ClassBench-ng installation (see `./vendor/Makefile`).
 
 ## Usage
 ```
 ./classbench analyse FILE
 ```
-Analyses file, expecting FILE to be ovs-ofctl dump.
-Fields extracted from dump are:
-- dl_dst, dl_src, dl_type, dl_vlan, dl_vlan_pcp,
-- eth_type, in_port,
-- nw_dst, nw_proto, nw_src, nw_tos,
-- tp_dst, tp_src
+Analyses FILE, expecting FILE to be in the format used by `ovs-ofctl`.
+Fields extracted from FILE are:
+- in_port
+- dl_src, dl_dst, eth_type, dl_vlan, dl_vlan_pcp
+- nw_src, nw_dst, nw_tos, nw_proto,
+- tp_src, tp_dst
 
-Output's original Classbench seed with openflow YAML structure as last section.
+The output is an original ClassBench seed with an OpenFlow YAML structure as the last section.
 
 ```
-./classbench generate v4 SEED [--count=100] [--db-generator=<path>]
+./classbench generate v4 SEED [--count=<n>] [--db-generator=<path>]
 ```
-Generates --count of OpenFlow rules.
-If seed without OpenFlow section is provided, regular 5-tuples are generated.
-Output format is "attribute=value", joined by ", ".
+Generates IPv4 5-tuples or OpenFlow rules following properties from SEED.
+OpenFlow rules are generated only if SEED contains OpenFlow section.
+- `--count=<n>` specifies the number of generated 5-tuples/rules (default: `100`)
+- `--db-generator=<path>` specifies path to a ClassBench binary (default: `./vendor/db_generator/db_generator`)
 
+The output consists of `attribute=value` pairs joined by `, `.
+
+```
+./classbench generate v6 <seed> [--count=<n>]
+```
+Generates IPv6 5-tuples rules following properties from SEED.
+- `--count=<n>` specifies the number of generated 5-tuples (default: `100`)
+
+The output consists of `attribute=value` pairs joined by `, `.
+
+```
+./classbench -h | --help
+```
+Prints deatiled usage information.
