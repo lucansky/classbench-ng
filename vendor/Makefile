@@ -15,7 +15,7 @@ download:
 	# Make backup of parameter_files, if exists
 	-[ -d parameter_files ] && mv parameter_files parameter_files-$(BACKUP_TIME)
 
-	# Download and unpack ClassBench
+	# Download and unpack ClassBBnch parameter files
 	wget -O- -q http://www.arl.wustl.edu/classbench/parameter_files.tar.gz | tar -xvz
 
 patch: download
@@ -27,6 +27,5 @@ patch: download
 	sed -i 's/200/20000/' db_generator/PortList.h
 
 compile: patch
-
 	# Recurse to ClassBench compilation
 	make -C db_generator -B db_generator
