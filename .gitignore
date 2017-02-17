@@ -24,3 +24,5 @@ NOTES*
 .DS_Store
 vendor/db_generator
 vendor/db_generator-*
+vendor/parameter_files
+vendor/parameter_files-*
