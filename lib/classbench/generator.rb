@@ -144,7 +144,14 @@ module Classbench
 
 			return classbench_rules.map do |rule|
 
-				random_openflow_type = pregenerated_rule_types.sample
+				begin
+					random_openflow_type = pregenerated_rule_types.sample
+				end while 	((random_openflow_type.include?("nw_proto") and rule.attributes["nw_proto"] == 0) or
+				                 ((not random_openflow_type.include?("nw_proto")) and (not rule.attributes["nw_proto"] == 0)) or
+						 (random_openflow_type.include?("tp_src") and rule.attributes["tp_src"] == (0..65535)) or
+						 ((not random_openflow_type.include?("tp_src")) and (not rule.attributes["tp_src"] == (0..65535))) or
+						 (random_openflow_type.include?("tp_dst") and rule.attributes["tp_dst"] == (0..65535)) or
+						 ((not random_openflow_type.include?("tp_dst")) and (not rule.attributes["tp_dst"] == (0..65535))))
 
 				rule.remove_missing_attributes(random_openflow_type)
 
