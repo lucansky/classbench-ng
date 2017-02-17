@@ -143,7 +143,9 @@ module Classbench
 			end
 
 			return classbench_rules.map do |rule|
+
 				random_openflow_type = pregenerated_rule_types.sample
+
 				rule.remove_missing_attributes(random_openflow_type)
 
 				#p random_openflow_type
@@ -159,15 +161,16 @@ module Classbench
 							rule.attributes["eth_type"] = pregenerated_eth_types.sample
 						end
 
-						random_device_mac = (1..3).collect { "%02x" % [rand(255)] }.join(":")
+						random_dst_device_mac = (1..3).collect { "%02x" % [rand(255)] }.join(":")
 						if attribute == "dl_dst"
 							random_vendor = pregenerated_dl_dsts.sample
-							rule.attributes["dl_dst"] = random_vendor + ":" + random_device_mac
+							rule.attributes["dl_dst"] = random_vendor + ":" + random_dst_device_mac
 						end
 
+						random_src_device_mac = (1..3).collect { "%02x" % [rand(255)] }.join(":")
 						if attribute == "dl_src"
 							random_vendor = pregenerated_dl_srcs.sample
-							rule.attributes["dl_src"] = random_vendor + ":" + random_device_mac
+							rule.attributes["dl_src"] = random_vendor + ":" + random_src_device_mac
 						end
 
 						if attribute == "dl_vlan"
