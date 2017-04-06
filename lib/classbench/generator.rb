@@ -57,7 +57,7 @@ module Classbench
 				#p self.openflow_section
 
 			rescue NoMethodError
-				STDERR.puts "No openflow section found in seed."
+				STDERR.puts "No openflow section found in the seed."
 				return false
 			end
 

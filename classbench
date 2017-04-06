@@ -49,9 +49,8 @@ begin
 		end
 	elsif opts["version"]
 		puts "Version: #{Classbench::VERSION}"
-  end
-	# TODO: --version
+	end
 
-rescue Docopt::Exit => e
-	STDERR.puts e.message
+	rescue Docopt::Exit => e
+		STDERR.puts e.message
 end
