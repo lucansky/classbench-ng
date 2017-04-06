@@ -16,7 +16,7 @@ sudo gem install open4 ruby-ip docopt ipaddress
 ```
 git clone https://github.com/classbench-ng/classbench-ng.git
 make   # Downloads, patches and compiles original ClassBench in ./vendor/db_generator
-       # Downloads parameter files of original ClassBench to ./vendor/parameter_files
+       # Downloads the parameter files of original ClassBench to ./vendor/parameter_files
 ```
 
 ### Patching ClassBench
@@ -40,14 +40,14 @@ The output is an original ClassBench seed with an OpenFlow YAML structure as the
 ./classbench generate v4 SEED [--count=<n>] [--db-generator=<path>]
 ```
 Generates IPv4 5-tuples or OpenFlow rules following properties from SEED.
-OpenFlow rules are generated only if SEED contains OpenFlow section.
+OpenFlow rules are generated only if SEED contains an OpenFlow section.
 - `--count=<n>` specifies the number of generated 5-tuples/rules (default: `100`)
-- `--db-generator=<path>` specifies path to a ClassBench binary (default: `./vendor/db_generator/db_generator`)
+- `--db-generator=<path>` specifies the path to a ClassBench binary (default: `./vendor/db_generator/db_generator`)
 
 The output consists of `attribute=value` pairs joined by `, `.
 
 ```
-./classbench generate v6 <seed> [--count=<n>]
+./classbench generate v6 SEED [--count=<n>]
 ```
 Generates IPv6 5-tuples rules following properties from SEED.
 - `--count=<n>` specifies the number of generated 5-tuples (default: `100`)
