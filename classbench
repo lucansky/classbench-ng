@@ -14,7 +14,6 @@ Usage:
   #{__FILE__} generate v6 <seed> [--count=<n>] [--db-generator=<path>]
   #{__FILE__} generate of <seed> [--count=<n>] [--db-generator=<path>]
   #{__FILE__} -h | --help
-  #{__FILE__} version
 
 Options:
   --db-generator=<path>     Path to binary of original db_generator [default: ./vendor/db_generator/db_generator]
@@ -34,6 +33,9 @@ Generator accept's Classbench seed with openflow section.
 Output's one rule per line in format "attribute=value", joined by ", ".
 
 DOCOPT
+# Add the following line to the DOCOPT's "Options" pattern to show support of
+# "version" parameter.
+#  #{__FILE__} version
 
 begin
 	opts = Docopt::docopt(doc)
