@@ -42,13 +42,17 @@ module Classbench
 
 	end
 
-	def self.generate(filename, count, db_generator_path)
+	def self.generate(format, filename, count, db_generator_path)
 		generator = Generator.new(filename, db_generator_path)
-		has_openflow = generator.parse_seed
+		if format == "of"
+			if !generator.parse_seed
+				return
+			end
+		end
 
 		#puts  YAML.dump(generator.openflow_section)
-		rules = generator.generate_rules(count)
-		if has_openflow
+		rules = generator.generate_rules(format, count)
+		if format == "of"
 			rules.map!(&:to_vswitch_format)
 		end
 

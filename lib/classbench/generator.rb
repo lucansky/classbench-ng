@@ -113,15 +113,23 @@ module Classbench
 		end
 
 		##########################
-		def generate_classbench_rules(count)
+		def generate_classbench_rules(format, count)
 			current_dir = File.dirname(__FILE__)
 			tmp_filters = Tempfile.new('filters')
 
-			# db_generator -c filename #{count} 0 0 0 tmp/#{rand}
-			# Call classbench
-			#system(current_dir+"/db_generator", "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path, " > /dev/null")
-			pid, stdin, stdout, stderr = Open4::popen4(self.db_generator_path, "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path)
-			ignored, status = Process::waitpid2 pid
+			if format == "v6"
+				# db_generator -c6 filename #{count} 0 0 0 tmp/#{rand}
+				# Call classbench
+				#system(current_dir+"/db_generator", "-c6", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path, " > /dev/null")
+				pid, stdin, stdout, stderr = Open4::popen4(self.db_generator_path, "-c6", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path)
+				ignored, status = Process::waitpid2 pid
+			else # format == "v4" || format format == "of"
+				# db_generator -c filename #{count} 0 0 0 tmp/#{rand}
+				# Call classbench
+				#system(current_dir+"/db_generator", "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path, " > /dev/null")
+				pid, stdin, stdout, stderr = Open4::popen4(self.db_generator_path, "-c", self.seed_path, count.to_s, "0", "0", "0", tmp_filters.path)
+				ignored, status = Process::waitpid2 pid
+			end
 
 			#STDERR.puts "done"
 			#puts status
@@ -135,10 +143,10 @@ module Classbench
 			return raw_rules
 		end
 
-		def generate_rules(count)
-			generate_classbench_rules(count)
+		def generate_rules(format, count)
+			generate_classbench_rules(format, count)
 
-			if not self.openflow_section
+			if format != "of"
 				return self.raw_rules
 			end
 
