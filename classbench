@@ -5,32 +5,36 @@ require_relative "lib/classbench"
 require "pp"
 require "docopt"
 doc = <<DOCOPT
-Classbench utility
-  Firewall/openflow rule generator.
+ClassBench-ng
+  A tool for generation of synthetic classification rule sets for benchmarking.
 
 Usage:
   #{__FILE__} analyse FILE
-  #{__FILE__} generate v4 <seed> [--count=<n>] [--db-generator=<path>]
-  #{__FILE__} generate v6 <seed> [--count=<n>] [--db-generator=<path>]
-  #{__FILE__} generate of <seed> [--count=<n>] [--db-generator=<path>]
+  #{__FILE__} generate v4 SEED [--count=<n>] [--db-generator=<path>]
+  #{__FILE__} generate v6 SEED [--count=<n>] [--db-generator=<path>]
+  #{__FILE__} generate of SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} -h | --help
 
 Options:
-  --db-generator=<path>     Path to binary of original db_generator [default: ./vendor/db_generator/db_generator]
-  --count=<n>               Count of rules to generate [default: 100]
+  --db-generator=<path>     Path to an original ClassBench binary.
+                            [default: ./vendor/db_generator/db_generator]
+  --count=<n>               The number of rules to be generated.
+                            [default: 100]
   -h --help                 Show this screen.
 
-Analyser accept's as input ovs-ofctl dump.
-Fields extracted from dump are:
-	- dl_dst, dl_src, dl_type, (dl_vlan, dl_vlan_pcp,)
-	- eth_type, in_port,
-	- nw_dst, nw_proto, nw_src, nw_tos,
-	- tp_dst, tp_src
-Output is original Classbench seed
-	with openflow YAML structure as last section.
+Analyser accepts as an input an ovs-ofctl dump.
+Fields extracted from the dump are:
+	- in_port,
+	- dl_src, dl_dst, eth_type, dl_vlan, dl_vlan_pcp,
+	- nw_src, nw_dst, nw_tos, nw_proto,
+	- tp_src, tp_dst
+The output is an original ClassBench seed with an OpenFlow YAML structure as
+the last section.
 
-Generator accept's Classbench seed with openflow section.
-Output's one rule per line in format "attribute=value", joined by ", ".
+Generator accepts as an input an original ClassBench seed that has to contain
+an OpenFlow section in case of "generate of".
+The output is either the same as of original ClassBench outputs or it consists
+of "attribute=value" pairs joined by ", ".
 
 DOCOPT
 # Add the following line to the DOCOPT's "Options" pattern to show support of
@@ -43,11 +47,11 @@ begin
 		Classbench::analyse(opts["FILE"])
 	elsif opts["generate"]
 		if opts["v4"]
-			Classbench::generate("v4", opts["<seed>"], (opts["--count"].to_i), opts["--db-generator"])
+			Classbench::generate("v4", opts["SEED"], (opts["--count"].to_i), opts["--db-generator"])
 		elsif opts["v6"]
-			Classbench::generate("v6", opts["<seed>"], (opts["--count"].to_i), opts["--db-generator"])
+			Classbench::generate("v6", opts["SEED"], (opts["--count"].to_i), opts["--db-generator"])
 		elsif opts["of"]
-			Classbench::generate("of", opts["<seed>"], (opts["--count"].to_i), opts["--db-generator"])
+			Classbench::generate("of", opts["SEED"], (opts["--count"].to_i), opts["--db-generator"])
 		end
 	elsif opts["version"]
 		puts "Version: #{Classbench::VERSION}"

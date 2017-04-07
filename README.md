@@ -1,6 +1,6 @@
 # ClassBench-ng
 A tool for generation of synthetic classification rule sets for benchmarking, which is based on original (no longer maintained) [ClassBench](http://www.arl.wustl.edu/classbench/).
-Format of the generated rules can be one of the following:
+The format of the generated rules can be one of the following:
 - IPv4 5-tuple
 - IPv6 5-tuple
 - OpenFlow
@@ -21,7 +21,7 @@ make   # Downloads, patches and compiles original ClassBench in ./vendor/db_gene
 
 ### Patching ClassBench
 Original ClassBench is improved using patches in `./patches` directory and the size of its statically initialized arrays is increased, where necessary.
-These changes are automatically applied on downloaded ClassBench during ClassBench-ng installation (see `./vendor/Makefile`).
+These changes are automatically applied on downloaded original ClassBench during ClassBench-ng installation (see `./vendor/Makefile`).
 
 ## Usage
 ```
@@ -29,8 +29,8 @@ These changes are automatically applied on downloaded ClassBench during ClassBen
 ```
 Analyses FILE, expecting FILE to be in the format used by `ovs-ofctl`.
 Fields extracted from FILE are:
-- in_port
-- dl_src, dl_dst, eth_type, dl_vlan, dl_vlan_pcp
+- in_port,
+- dl_src, dl_dst, eth_type, dl_vlan, dl_vlan_pcp,
 - nw_src, nw_dst, nw_tos, nw_proto,
 - tp_src, tp_dst
 
@@ -39,18 +39,27 @@ The output is an original ClassBench seed with an OpenFlow YAML structure as the
 ```
 ./classbench generate v4 SEED [--count=<n>] [--db-generator=<path>]
 ```
-Generates IPv4 5-tuples or OpenFlow rules following properties from SEED.
-OpenFlow rules are generated only if SEED contains an OpenFlow section.
-- `--count=<n>` specifies the number of generated 5-tuples/rules (default: `100`)
-- `--db-generator=<path>` specifies the path to a ClassBench binary (default: `./vendor/db_generator/db_generator`)
+Generates IPv4 5-tuples following the properties from SEED.
+- `--count=<n>` specifies the number of 5-tuples to be generated (default: `100`)
+- `--db-generator=<path>` specifies the path to an original ClassBench binary (default: `./vendor/db_generator/db_generator`)
 
-The output consists of `attribute=value` pairs joined by `, `.
+The output format is the same as of original ClassBench outputs.
 
 ```
-./classbench generate v6 SEED [--count=<n>]
+./classbench generate v6 SEED [--count=<n>] [--db-generator=<path>]
 ```
-Generates IPv6 5-tuples rules following properties from SEED.
-- `--count=<n>` specifies the number of generated 5-tuples (default: `100`)
+Generates IPv6 5-tuples following the properties from SEED.
+- `--count=<n>` specifies the number of 5-tuples to be generated (default: `100`)
+- `--db-generator=<path>` specifies the path to an original ClassBench binary (default: `./vendor/db_generator/db_generator`)
+
+The output format is the same as of original ClassBench outputs.
+
+```
+./classbench generate of SEED [--count=<n>] [--db-generator=<path>]
+```
+Generates OpenFlow rules following the properties from SEED that has to contain an OpenFlow section.
+- `--count=<n>` specifies the number of rules to be generated (default: `100`)
+- `--db-generator=<path>` specifies the path to an original ClassBench binary (default: `./vendor/db_generator/db_generator`)
 
 The output consists of `attribute=value` pairs joined by `, `.
 
