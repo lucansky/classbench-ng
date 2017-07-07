@@ -1,5 +1,33 @@
+diff --git a/ExtraList.cc b/ExtraList.cc
+index d09f0aa..4b309fe 100644
+--- a/ExtraList.cc
++++ b/ExtraList.cc
+@@ -17,6 +17,7 @@ ExtraList::ExtraList(int P1) {
+   for (int i = 1; i <= P; i++){
+     // Create header list
+     struct ExtraListHeader *temp = new struct ExtraListHeader;
++    temp->field = NULL;
+     temp->next = NULL;
+     temp->prev = last;
+     if (i == 1) {
+@@ -39,11 +40,12 @@ ExtraList::~ExtraList() {
+     for (int j = 0; j < N; j++){
+       tempI = temp->field[j];
+       // Delete list of values
+-      delete(tempI->value);
+-      delete(tempI->prob);
++      delete[] (tempI->value);
++      delete[] (tempI->prob);
++      delete(tempI);
+     }
+     first = first->next;
+-    delete(temp->field);
++    delete[] (temp->field);
+     delete(temp);
+   }
+ }
 diff --git a/FilterList.cc b/FilterList.cc
-index c123529..fce2c09 100644
+index c123529..4677276 100644
 --- a/FilterList.cc
 +++ b/FilterList.cc
 @@ -11,6 +11,9 @@
@@ -12,7 +40,44 @@ index c123529..fce2c09 100644
  
  FilterList::FilterList() {
    first = last = NULL;
-@@ -125,35 +128,66 @@ void FilterList::push(struct filter filt) {
+@@ -20,6 +23,9 @@ FilterList::FilterList() {
+ FilterList::~FilterList() { 
+   struct FilterList_item *temp;
+   while (first != NULL) {
++    if (first->filt.num_ext_field > 0) {
++      delete[] (first->filt.ext_field);
++    }
+     temp = first->next;
+     delete(first);
+     first = temp;
+@@ -57,7 +63,7 @@ struct FilterList_item* FilterList::operator()(int i) {
+ void FilterList::insert(struct FilterList_item *item, struct filter filt) {
+   struct FilterList_item *newitem;
+   newitem = new struct FilterList_item;
+-  newitem->filt = filt;
++  copy_filter(newitem->filt, filt);
+   newitem->prev = item->prev;
+   newitem->next = item;
+   if (first == item) first = newitem;
+@@ -72,7 +78,7 @@ void FilterList::insert(struct FilterList_item *item, struct filter filt) {
+ void FilterList::operator&=(struct filter filt) {
+   struct FilterList_item *temp;
+   temp = new struct FilterList_item;
+-  temp->filt = filt;
++  copy_filter(temp->filt, filt);
+   temp->prev = last;
+   temp->next = NULL;
+   if (num == 0){
+@@ -110,7 +116,7 @@ void FilterList::operator=(FilterList* L) {
+ void FilterList::push(struct filter filt) {
+   struct FilterList_item *temp;
+   temp = new struct FilterList_item;
+-  temp->filt = filt;
++  copy_filter(temp->filt, filt);
+   temp->next = first;
+   temp->prev = NULL;
+   if (num == 0){
+@@ -125,35 +131,66 @@ void FilterList::push(struct filter filt) {
  
  // Print the contents of the FilterList.
  void FilterList::print(FILE* fp) {
@@ -103,11 +168,39 @@ index c123529..fce2c09 100644
      // Print source port 
      fprintf(fp, "%d : %d\t",
  	    tempfilt->filt.sp[0], tempfilt->filt.sp[1]);
+diff --git a/FlagList.cc b/FlagList.cc
+index 074c4e7..9a214cf 100644
+--- a/FlagList.cc
++++ b/FlagList.cc
+@@ -27,8 +27,8 @@ FlagList::~FlagList() {
+       first[i] = temp;
+     }
+   }
+-  delete(first);
+-  delete(last);
++  delete[] (first);
++  delete[] (last);
+ }
+ 
+ void FlagList::choose(float p, int prot, unsigned *flags, unsigned *flags_mask){
+diff --git a/PortList.cc b/PortList.cc
+index 34ad3c2..4b26d15 100644
+--- a/PortList.cc
++++ b/PortList.cc
+@@ -22,7 +22,7 @@ PortList::PortList(int N1) {
+   }
+ }
+ 
+-PortList::~PortList() { delete ports; }
++PortList::~PortList() { delete[] ports; }
+ 
+ void PortList::read(int t, FILE *fp) {
+   int done = 0;
 diff --git a/PrefixList.cc b/PrefixList.cc
-index a3df1dc..740d7ea 100644
+index a3df1dc..c3e23e5 100644
 --- a/PrefixList.cc
 +++ b/PrefixList.cc
-@@ -11,14 +11,14 @@
+@@ -11,21 +11,21 @@
  #include "PrefixList.h"
  
  PrefixList::PrefixList() {
@@ -124,6 +217,15 @@ index a3df1dc..740d7ea 100644
      }
    }
  }
+ 
+ PrefixList::~PrefixList() {
+-  for (int type = 0; type < 25; type++) delete prefixes[type];
+-  delete prefixes;
++  for (int type = 0; type < 25; type++) delete[] prefixes[type];
++  delete[] prefixes;
+ }
+ 
+ void PrefixList::read(FILE* fp){
 @@ -102,14 +102,14 @@ void PrefixList::read_type(int type, FILE *fp) {
    int tlen = 0;
    int slen = 0;
@@ -313,6 +415,21 @@ index 2d39529..1df63a2 100644
  };
  
  class PrefixList {
+diff --git a/ProtList.cc b/ProtList.cc
+index a4bc451..b9bd739 100644
+--- a/ProtList.cc
++++ b/ProtList.cc
+@@ -24,8 +24,8 @@ ProtList::ProtList() {
+ }
+ 
+ ProtList::~ProtList() {
+-  for (int i = 0; i < 25; i++) delete protocols[i].pt_prob;
+-  delete protocols;
++  for (int i = 0; i < 25; i++) delete[] protocols[i].pt_prob;
++  delete[] protocols;
+ }
+ 
+ void ProtList::read(FILE *fp) {
 diff --git a/README b/README
 index 116aac2..f104e85 100644
 --- a/README
@@ -346,9 +463,18 @@ index 116aac2..f104e85 100644
  
  -flags
 diff --git a/TupleBST.cc b/TupleBST.cc
-index 9163d9b..32e0cc8 100644
+index 9163d9b..911f1d5 100644
 --- a/TupleBST.cc
 +++ b/TupleBST.cc
+@@ -17,7 +17,7 @@ TupleBST::TupleBST() {
+ 
+ TupleBST::~TupleBST() {
+   if (root != NULL) cleanup(root);
+-  delete(ListOfFilterIndexPtrs);
++  delete[] (ListOfFilterIndexPtrs);
+ }
+ 
+ void TupleBST::cleanup(TupleBST_item* node){
 @@ -34,7 +34,7 @@ void TupleBST::cleanup(TupleBST_item* node){
  
  int TupleBST::scope(FiveTuple* ftuple){
@@ -359,7 +485,7 @@ index 9163d9b..32e0cc8 100644
  }
  
 diff --git a/custom_db.cc b/custom_db.cc
-index 6f8d193..0484e53 100644
+index 6f8d193..ccb8b2e 100644
 --- a/custom_db.cc
 +++ b/custom_db.cc
 @@ -20,7 +20,9 @@
@@ -372,7 +498,40 @@ index 6f8d193..0484e53 100644
  
  int custom_db_gen(int num_filters, FilterList* filters, FILE* fp_in, int smoothness, float addr_scope, float port_scope, int branch){
  
-@@ -464,33 +466,64 @@ void select_ports(int port_type, struct filter *temp_filter, PortList *sparL, Po
+@@ -81,6 +83,9 @@ int custom_db_gen(int num_filters, FilterList* filters, FILE* fp_in, int smoothn
+   // Temporary filter
+   // struct filter temp_filter;
+   struct filter *temp_filters = new struct filter[num_filters+1];
++  for (int i = 0; i < num_filters+1; i++) {
++    temp_filters[i].num_ext_field = 0;
++  }
+   dlist *Flist = new dlist;
+   struct range temp_range;
+   struct ppair temp_ppair;
+@@ -143,6 +148,8 @@ int custom_db_gen(int num_filters, FilterList* filters, FILE* fp_in, int smoothn
+   printf(" \tdone\n");
+   // Free up memory
+   delete(protL);
++  delete(flagL);
++  delete(extraL);
+   delete(sparL);
+   delete(spemL);
+   delete(dparL);
+@@ -219,7 +226,12 @@ int custom_db_gen(int num_filters, FilterList* filters, FILE* fp_in, int smoothn
+   // printf(" \tdone\n");
+ 
+   // Delete data structures
+-  delete(temp_filters);
++  for (int i = 0; i < num_filters+1; i++) {
++    if (temp_filters[i].num_ext_field > 0) {
++      delete[] (temp_filters[i].ext_field);
++    }
++  }
++  delete[] (temp_filters);
+   // printf("Done with custom_db\n");
+ 
+   return filter_cnt;
+@@ -464,33 +476,64 @@ void select_ports(int port_type, struct filter *temp_filter, PortList *sparL, Po
  }
  
  void fprint_filter(FILE *fp, struct filter *filt){
@@ -561,7 +720,7 @@ index 3344759..afa53fb 100644
    }
  
 diff --git a/dbintree.cc b/dbintree.cc
-index 9274710..a2f76d1 100644
+index 9274710..9a53299 100644
 --- a/dbintree.cc
 +++ b/dbintree.cc
 @@ -13,13 +13,13 @@
@@ -583,7 +742,30 @@ index 9274710..a2f76d1 100644
      skew[u] = 0;
      corr[u] = 0;
      p1child[u] = 0;
-@@ -99,13 +99,13 @@ void dbintree::read_skew(FILE* fp_in){
+@@ -28,10 +28,10 @@ dbintree::dbintree() {
+ }
+ 
+ dbintree::~dbintree() {
+-  delete(skew);
+-  delete(corr);
+-  delete(p1child);
+-  delete(p2child);
++  delete[] (skew);
++  delete[] (corr);
++  delete[] (p1child);
++  delete[] (p2child);
+   // call recursive node destructor
+   if (root != NULL) delete_node(root);
+ }
+@@ -39,6 +39,7 @@ dbintree::~dbintree() {
+ void dbintree::delete_node(struct tnode *me){
+   if (me->child0 != NULL) delete_node(me->child0);
+   if (me->child1 != NULL) delete_node(me->child1);
++  delete(me->stubList);
+   delete(me);
+   return;
+ }
+@@ -99,13 +100,13 @@ void dbintree::read_skew(FILE* fp_in){
      // printf("matches = %d\n",matches);
      // printf("level = %d, skew = %.4f\n",level,skew);
      if (matches == 4) {
@@ -599,7 +781,7 @@ index 9274710..a2f76d1 100644
  	exit(1);
        }
        // printf("Read line: %d\t%.4f\t%.4f\t%.4f\n",level,p1_t,p2_t,f_skew);
-@@ -147,7 +147,7 @@ void dbintree::read_corr(FILE* fp_in){
+@@ -147,7 +148,7 @@ void dbintree::read_corr(FILE* fp_in){
  void dbintree::print_skew(FILE *fp) {
    
    fprintf(fp,"Level\tp1\tp2\tSkew\n");
@@ -608,7 +790,7 @@ index 9274710..a2f76d1 100644
      fprintf(fp,"%d\t%.4f\t%.4f\t%.4f\n",
  	    i,p1child[i],p2child[i],skew[i]);
    }
-@@ -157,14 +157,14 @@ void dbintree::print_skew(FILE *fp) {
+@@ -157,14 +158,14 @@ void dbintree::print_skew(FILE *fp) {
  void dbintree::print_corr(FILE *fp) {
    
    fprintf(fp,"Level\tCorr\n");
@@ -625,7 +807,7 @@ index 9274710..a2f76d1 100644
    // Create copy of list
    dlist *temp_list = new dlist();
    (*temp_list)=(Flist);
-@@ -221,7 +221,7 @@ void dbintree::add2child_stublist(struct tnode *node, int dir, int filt){
+@@ -221,7 +222,7 @@ void dbintree::add2child_stublist(struct tnode *node, int dir, int filt){
    return;
  }
  
@@ -634,7 +816,7 @@ index 9274710..a2f76d1 100644
    int Flist_size = 0;
    int lev = node->lvl;
    
-@@ -237,21 +237,21 @@ void dbintree::add_stub(struct tnode *node, unsigned int addr, dlist* Flist, str
+@@ -237,21 +238,21 @@ void dbintree::add_stub(struct tnode *node, unsigned int addr, dlist* Flist, str
    // printf("Flist_size = %d\n",Flist_size);
    
    double temp;
@@ -663,7 +845,7 @@ index 9274710..a2f76d1 100644
    }
   
    // Allocate temp_list's
-@@ -297,7 +297,7 @@ void dbintree::add_stub(struct tnode *node, unsigned int addr, dlist* Flist, str
+@@ -297,7 +298,7 @@ void dbintree::add_stub(struct tnode *node, unsigned int addr, dlist* Flist, str
    // printf("Flist_size = %d, tempList: ",Flist_size); tempList->print(stdout); printf("\n");
    // if lev1_flag == 1, dump all lev1 filters to one side
    // printf("lev = %d, MyNest = %d, Nest = %d, lev1_flag = %d\n",lev,MyNest,Nest,lev1_flag);
@@ -672,7 +854,7 @@ index 9274710..a2f76d1 100644
      // printf("add_stub: Enforcing nesting limit\n");
      // Add all filters to stublist and let the finish_node process distribute them
      int fptr;
-@@ -331,7 +331,7 @@ void dbintree::add_stub(struct tnode *node, unsigned int addr, dlist* Flist, str
+@@ -331,7 +332,7 @@ void dbintree::add_stub(struct tnode *node, unsigned int addr, dlist* Flist, str
  	// sa_len > lvl
  	// Prevent prefix nesting
  	sa = sa << lev;
@@ -681,7 +863,7 @@ index 9274710..a2f76d1 100644
  	// sa now equals next "bit" of source address
  	if (filters[fptr].sa_len == (lev+1)) {
  	  // Source prefix will be exhausted at next level
-@@ -407,7 +407,7 @@ void dbintree::add_stub(struct tnode *node, unsigned int addr, dlist* Flist, str
+@@ -407,7 +408,7 @@ void dbintree::add_stub(struct tnode *node, unsigned int addr, dlist* Flist, str
    return;
  }
  
@@ -690,7 +872,7 @@ index 9274710..a2f76d1 100644
    int Flist_size = 0;
    int stubList_size = 0;
    int lev = node->lvl;
-@@ -479,20 +479,20 @@ void dbintree::finish_node(struct tnode *node, unsigned int addr, dlist* Flist,
+@@ -479,20 +480,20 @@ void dbintree::finish_node(struct tnode *node, unsigned int addr, dlist* Flist,
  
    double temp;
    int path;
@@ -717,7 +899,7 @@ index 9274710..a2f76d1 100644
    }
    
    // Create an empty list
-@@ -519,7 +519,7 @@ void dbintree::finish_node(struct tnode *node, unsigned int addr, dlist* Flist,
+@@ -519,7 +520,7 @@ void dbintree::finish_node(struct tnode *node, unsigned int addr, dlist* Flist,
      // If at the nesting threshold and list has more than one child,
      //   then split list (allocate all nodes with level == lev1 to one path)
      // printf("lev = %d, MyNest = %d, Nest = %d, lev1_flag = %d\n",lev,MyNest,Nest,lev1_flag);
@@ -5271,7 +5453,7 @@ index 0000000..2f10279
 diff --git a/makefile b/makefile
 old mode 100755
 new mode 100644
-index 773f4c1..2c86037
+index 773f4c1..ca7b1d8
 --- a/makefile
 +++ b/makefile
 @@ -9,8 +9,9 @@
@@ -5281,7 +5463,7 @@ index 773f4c1..2c86037
 +LIB = -I./ip-address/include
  ##CFLAGS = -g -pg
 -CFLAGS = -O2
-+CFLAGS = -O2 -g -std=c++11 $(LIB)
++CFLAGS = -O2 -std=c++11 $(LIB)
  .cc.o:
  	${CC} ${CFLAGS} -c $*.cc 
  
@@ -5438,7 +5620,7 @@ index 38771e7..fbac9d3 100644
      
      // Check source address match
 diff --git a/sbintree.cc b/sbintree.cc
-index d755099..6a83b51 100644
+index d755099..062fbaf 100644
 --- a/sbintree.cc
 +++ b/sbintree.cc
 @@ -13,12 +13,12 @@
@@ -5458,6 +5640,19 @@ index d755099..6a83b51 100644
      skew[u] = 0;
      p1child[u] = 0;
      p2child[u] = 0;
+@@ -26,9 +26,9 @@ sbintree::sbintree() {
+ }
+ 
+ sbintree::~sbintree() {
+-  delete(skew);
+-  delete(p1child);
+-  delete(p2child);
++  delete[] (skew);
++  delete[] (p1child);
++  delete[] (p2child);
+   // call recursive node destructor
+   if (root != NULL) delete_node(root);
+ }
 @@ -96,13 +96,13 @@ void sbintree::read_skew(FILE* fp_in){
      // printf("matches = %d\n",matches);
      // printf("level = %d, skew = %.4f\n",level,skew);
@@ -5536,6 +5731,17 @@ index d755099..6a83b51 100644
        // Allocate nest_list
        dlist *nest_list = new dlist();
        dlist *other_list = new dlist();
+@@ -291,6 +291,10 @@ void sbintree::add_node(struct stnode *prnt, int lev, int dir, unsigned int addr
+ 	  add_node(me, lev1, 1, addr1, other_list, filters, MyNest);
+ 	}
+       }	  
++
++      // Deallocate nest_list
++      delete(nest_list);
++      delete(other_list);
+     }
+     else {
+       // Othewise, branch based on branching probability and skew  
 diff --git a/sbintree.h b/sbintree.h
 index b085696..937d941 100644
 --- a/sbintree.h
@@ -5550,7 +5756,7 @@ index b085696..937d941 100644
   public:
    sbintree();
 diff --git a/stdinc.h b/stdinc.h
-index f566e0f..f731846 100644
+index f566e0f..3c2f685 100644
 --- a/stdinc.h
 +++ b/stdinc.h
 @@ -10,6 +10,7 @@
@@ -5589,6 +5795,37 @@ index f566e0f..f731846 100644
    int sa_len; // IP source address mask length
    int da_len; // IP destination address mask length
    int sp[2]; // Transport source port range [low,high]
+@@ -69,6 +70,30 @@ struct filter {
+   int *ext_field; // Pointer to array of extra header fields
+ };
+ 
++// Do a deep copy of orig filter
++inline void copy_filter(struct filter& copy, struct filter orig) {
++  copy.sa            = orig.sa;
++  copy.da            = orig.da;
++  copy.sa_len        = orig.sa_len;
++  copy.da_len        = orig.da_len;
++  copy.sp[0]         = orig.sp[0];
++  copy.sp[1]         = orig.sp[1];
++  copy.dp[0]         = orig.dp[0];
++  copy.dp[1]         = orig.dp[1];
++  copy.prot_num      = orig.prot_num;
++  copy.flags         = orig.flags;
++  copy.flags_mask    = orig.flags_mask;
++  copy.num_ext_field = orig.num_ext_field;
++  if (copy.num_ext_field > 0) {
++    copy.ext_field   = new int[copy.num_ext_field];
++    for (int i = 0; i < copy.num_ext_field; i++) {
++      copy.ext_field[i] = orig.ext_field[i];
++    }
++  } else {
++    copy.ext_field   = NULL;
++  }
++}
++
+ struct range {
+   int low;
+   int high;
 diff --git a/uint128_t.cc b/uint128_t.cc
 new file mode 100644
 index 0000000..1e16bbd
