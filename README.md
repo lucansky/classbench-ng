@@ -20,7 +20,7 @@ make   # Downloads, patches and compiles original ClassBench in ./vendor/db_gene
 ```
 
 ### Patching ClassBench
-Original ClassBench is improved using patches in `./patches` directory and the size of its statically initialized arrays is increased, where necessary.
+Original ClassBench can be improved using one of the patches in `./patches` directory (`./patches/improvements_ipv6.patch` by default) and the size of its statically initialized arrays is increased, where necessary.
 These changes are automatically applied on downloaded original ClassBench during ClassBench-ng installation (see `./vendor/Makefile`).
 
 ## Usage
@@ -67,3 +67,6 @@ The output consists of `attribute=value` pairs joined by `, `.
 ./classbench -h | --help
 ```
 Prints deatiled usage information.
+
+## Known Issues
+- the number of generated rules is usually lower than in original ClassBench (i.e., ClassBench-ng generates higher number of redundant rules that are removed in the last phase)
