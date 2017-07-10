@@ -15,7 +15,7 @@ download:
 	# Make backup of parameter_files, if exists
 	-[ -d parameter_files ] && mv parameter_files parameter_files-$(BACKUP_TIME)
 
-	# Download and unpack ClassBBnch parameter files
+	# Download and unpack ClassBench parameter files
 	wget -O- -q http://www.arl.wustl.edu/classbench/parameter_files.tar.gz | tar -xvz
 
 patch: download
