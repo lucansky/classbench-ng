@@ -31,3 +31,6 @@ patch: download
 compile: patch
 	# Recurse to ClassBench compilation
 	make -C db_generator -B db_generator
+
+clean:
+	rm -rf db_generator* parameter_files*
