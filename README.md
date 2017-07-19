@@ -28,7 +28,7 @@ Classbench-ng can be used in two different ways:
 - To analyse an existing rule set and extract the associated classbench-ng SEED.
 - To generate a synthetic rule set from an input SEED.
 
-# Classbench-ng analyser
+#### Classbench-ng analyser
 The current version of the analyser support only OpenFlow rules.
 ```
 ./classbench analyse FILE
@@ -42,7 +42,7 @@ Fields extracted from FILE are:
 
 The output is an original ClassBench seed with an OpenFlow YAML structure as the last section.
 
-# Classbench-ng rule generator
+#### Classbench-ng rule generator
 The current version can successfully generate IPv4, IPv6 and OpenFlow 1.0 flow rules.
 IPv4 SEEDs can be found in `./vendor/parameter_files`
 OpenFlow SEEDs can be found in `./seeds`
