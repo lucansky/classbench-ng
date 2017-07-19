@@ -44,8 +44,8 @@ The output is an original ClassBench seed with an OpenFlow YAML structure as the
 
 #### Classbench-ng rule generator
 The current version can successfully generate IPv4, IPv6 and OpenFlow 1.0 flow rules.
-IPv4 SEEDs can be found in `./vendor/parameter_files`
-OpenFlow SEEDs can be found in `./seeds`
+- IPv4 SEEDs can be found in `./vendor/parameter_files`
+- OpenFlow SEEDs can be found in `./seeds`
 ```
 ./classbench generate v4 SEED [--count=<n>] [--db-generator=<path>]
 ```
