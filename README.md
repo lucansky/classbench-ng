@@ -20,8 +20,23 @@ make   # Downloads, patches and compiles original ClassBench in ./vendor/db_gene
 ```
 
 ### Patching ClassBench
-Original ClassBench can be improved using one of the patches in `./patches` directory (`./patches/improvements_ipv6.patch` by default) and the size of its statically initialized arrays is increased, where necessary.
-These changes are automatically applied on downloaded original ClassBench during ClassBench-ng installation (see `./vendor/Makefile`).
+Original ClassBench is patched using `./patches/improvements_ipv6.patch` and the size of its statically initialized arrays is increased, where necessary.
+These changes are automatically applied on downloaded original ClassBench during ClassBench-ng installation.
+
+By modifying `./vendor/Makefile` the user can select a different patch from `./patches` directory to be applied during installation.
+Basic characteristics of patches available in `./patches` directory and suggestions when to use them are following:
+
+`improvements.patch`
+- improves precision of IPv4 prefixes generation
+- use when IPv6 prefixes generation is not required
+
+`ipv6.patch`
+- adds support for IPv6 prefixes generation
+- use when IPv6 prefixes generation is required and precision of IPv4/IPv6 prefixes generation is not crucial
+
+`improvements_ipv6.patch`
+- adds support for IPv6 prefixes generation and improves precision of both IPv4 and IPv6 prefixes generation
+- use when IPv6 prefixes generation is required and precision of IPv4/IPv6 prefixes generation is crucial
 
 ## Usage
 ClassBench-ng can be used in two different ways:
