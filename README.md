@@ -78,7 +78,7 @@ The output consists of `attribute=value` pairs joined by `, `.
 ```
 ./classbench -h | --help
 ```
-Prints deatiled usage information.
+Prints detailed usage information.
 
 ## Known Issues
 - the number of generated rules is usually lower than in original ClassBench (i.e., ClassBench-ng generates higher number of redundant rules that are removed in the last phase)
