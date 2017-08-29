@@ -27,6 +27,8 @@ patch: download
 	# Patching PortList (extension of preallocated array is necessary)
 	# Raise limit of L5 rules from 200 to 20000.
 	sed -i 's/200/20000/' db_generator/PortList.h
+	# solve bug for stack corruption in Ubuntu 17.04
+	sed -i 's/comm\[[0-9]\]/comm\[7\]/g' db_generator/*.cc
 
 compile: patch
 	# Recurse to ClassBench compilation
