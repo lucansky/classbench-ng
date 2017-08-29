@@ -97,7 +97,6 @@ Prints detailed usage information.
 
 ## Known Issues
 - the number of generated rules is usually lower than in original ClassBench (i.e., ClassBench-ng generates higher number of redundant rules that are removed in the last phase)
-- running ClassBench-ng on Ubuntu 17.04 fails on "stack smashing error" (the tool was developed on Ubuntu 16.04 LTS and it works also on Ubuntu 15.04)
 
 ## How to Contribute
 Contributions are welcome via:
