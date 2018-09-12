@@ -98,6 +98,7 @@ Prints detailed usage information.
 ## Known Issues
 - the number of generated rules is usually lower than in original ClassBench (i.e., ClassBench-ng generates higher number of redundant rules that are removed in the last phase)
 - ClassBench-ng Analyser does not correctly analyses source/destination port prefixes specified using a bit map in the ovs-ofctl format
+- ClassBench-ng Analyser is not able to analyse rule sets with source/destination IPv6 prefixes
 
 ## How to Contribute
 Contributions are welcome via:
