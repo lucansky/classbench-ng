@@ -31,6 +31,8 @@ patch: download
 	sed -i 's/comm\[[0-9]\]/comm\[7\]/g' db_generator/*.cc
         # Define return type for original ClassBench's main function
 	sed -i 's/main/int main/' db_generator/db_generator.cc
+	# Replace Null (i.e., integer constant equal to 0) with NULL (i.e., null pointer)
+	sed -i 's/Null/NULL/' db_generator/FlagList.cc db_generator/custom_db.cc
 
 compile: patch
 	# Recurse to ClassBench compilation
