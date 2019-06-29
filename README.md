@@ -44,10 +44,14 @@ ClassBench-ng can be used in two different ways:
 - To generate a synthetic rule set from an input SEED.
 
 ### ClassBench-ng Analyser
-The current version of the analyser supports only OpenFlow rules.
+ClassBench-ng offers two versions of the analysers: OpenFlow analyser and Tuples analyser. 
 
+#### OpenFlow Analyser
+First version of analyser supports only OpenFlow rules.
+The output is an original ClassBench seed with an OpenFlow YAML structure as the last section.
+This version can be run with these arguments:
 ```
-./classbench analyse FILE
+./classbench analyse of FILE
 ```
 Analyses FILE, expecting FILE to be in the format used by `ovs-ofctl`.
 Fields extracted from FILE are:
@@ -56,7 +60,24 @@ Fields extracted from FILE are:
 - nw_src, nw_dst, nw_tos, nw_proto,
 - tp_src, tp_dst
 
-The output is an original ClassBench seed with an OpenFlow YAML structure as the last section.
+#### OpenFlow Analyser
+Second version of analyser accepts any filter rule sets format but file, 
+describing format of rules in set, has to be given to analyser as argument.
+How to define file with format is described in file lib/tuples_analyzer/README.
+In folder lib/tuples_analyzer/examples there are also examples of filter rule sets and 
+files with formats of rules defined to them.
+Fields extracted from rules are only parts of standard IP 5-tuple: 
+(protocol, source IPv4 address, source port or source port range, destination IPv4 address, 
+destination port or destination port range)
+The output is an original ClassBench seed without OpenFlow YAML structure.
+It can be run with these arguments:
+```
+./classbench analyse tuples --rules=<file> --format=<file>  [--output=<file>] [--logs]
+```
+- `--rules=<file>` specifies the path to file with filter rules
+- `--format=<file>` specifies the path to file with format of rules
+- `--output=<file>` specifies the path to output file
+- `--logs` enables printing error logs during processing of filter rules
 
 ### ClassBench-ng Rule Generator
 The current version can successfully generate IPv4, IPv6 and OpenFlow 1.0 flow rules.

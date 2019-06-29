@@ -9,20 +9,25 @@ ClassBench-ng
   A tool for generation of synthetic classification rule sets for benchmarking.
 
 Usage:
-  #{__FILE__} analyse FILE
+  #{__FILE__} analyse of FILE
+  #{__FILE__} analyse tuples --rules=<file> --format=<file>  [--output=<file>] [--logs]
   #{__FILE__} generate v4 SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} generate v6 SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} generate of SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} -h | --help
 
 Options:
+  --rules=<file>            Path to file with filter rules. 
+  --format=<file>           Path to file with format of rules.
+  --output=<file>           Path to output file.
+  --logs                    Enable printing error logs during processing of filter rules. 
   --db-generator=<path>     Path to an original ClassBench binary.
                             [default: ./vendor/db_generator/db_generator]
   --count=<n>               The number of rules to be generated.
                             [default: 100]
   -h --help                 Show this screen.
 
-Analyser accepts as an input an ovs-ofctl dump.
+Analyser launched with arguments: "analyse of", accepts as an input an ovs-ofctl dump.
 Fields extracted from the dump are:
 	- in_port,
 	- dl_src, dl_dst, eth_type, dl_vlan, dl_vlan_pcp,
@@ -30,6 +35,16 @@ Fields extracted from the dump are:
 	- tp_src, tp_dst
 The output is an original ClassBench seed with an OpenFlow YAML structure as
 the last section.
+
+Analyser launched with arguments: "analyse tuples", accepts any filter rule sets format but file, 
+describing format of rules in set, has to be given to analyser as argument. 
+How to define file with format is described in file lib/tuples_analyzer/README.
+In folder lib/tuples_analyzer/examples there are also examples of filter rule sets and 
+formats belonging to them.
+Fields extracted from the rules are parts of standard IP 5-tuple: 
+(protocol, source IPv4 address, source port or source port range, destination IPv4 address, 
+destination port or destination port range)
+The output is an original ClassBench seed without OpenFlow YAML structure.
 
 Generator accepts as an input an original ClassBench seed that has to contain
 an OpenFlow section in case of "generate of".
@@ -44,7 +59,11 @@ DOCOPT
 begin
 	opts = Docopt::docopt(doc)
 	if opts["analyse"]
-		Classbench::analyse(opts["FILE"])
+		if opts["of"]
+			Classbench::analyse_of(opts["FILE"])
+		elsif opts["tuples"]
+			Classbench::analyse_tuples(opts["--rules"], opts["--format"], opts["--output"], opts["--logs"])	
+		end
 	elsif opts["generate"]
 		if opts["v4"]
 			Classbench::generate("v4", opts["SEED"], (opts["--count"].to_i), opts["--db-generator"])

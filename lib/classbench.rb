@@ -32,7 +32,7 @@ module Classbench
 		t
 	end
 
-	def self.analyse(filename)
+	def self.analyse_of(filename)
 		analyser = Analyser.new
 		analyser.parse_openflow(File.read(filename))
 
@@ -41,6 +41,38 @@ module Classbench
 		puts analyser.generate_seed
 
 	end
+
+	def self.analyse_tuples(rules_filename, format_filename, output_filename, logs_enabled)
+		if logs_enabled and !output_filename.to_s.empty?
+			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename, "-o", output_filename, "-l")
+		elsif logs_enabled
+			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename, "-l")
+		elsif !output_filename.to_s.empty?
+			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename, "-o", output_filename)
+		else
+			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename)
+		end
+
+		ignored, status = Process::waitpid2 pid
+		
+		if status.exitstatus == 0
+			if output_filename.to_s.empty?			
+				puts stdout.read.strip
+			end
+			
+			if logs_enabled
+				warnings = stderr.read.strip
+
+				if !warnings.to_s.empty?				
+					puts warnings
+				end
+			end	
+		else
+			puts stderr.read.strip
+			exit(status.exitstatus)
+		end		
+		
+	end		
 
 	def self.generate(format, filename, count, db_generator_path)
 		generator = Generator.new(filename, db_generator_path)

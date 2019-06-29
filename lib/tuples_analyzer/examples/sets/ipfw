@@ -1,0 +1,4 @@
+ipfw add allow tcp from to 10.0.0.0/24 80
+ipfw add accept udp from to 192.0.0.14
+ipfw add deny any from to 5000:5100
+ipfw add drop from 443 to

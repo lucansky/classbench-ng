@@ -1,0 +1,1 @@
+iptables WILDCARD INPUT -s? SRC_IP? -d? DST_IP? -p? PROTOCOL? --sport? SRC_PORT? --dport? DST_PORT? -j WILDCARD
