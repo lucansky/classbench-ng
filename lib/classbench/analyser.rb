@@ -34,6 +34,8 @@ module Classbench
 				end
 				self.rules << Rule.new(rule)
 			end
+
+			calculate_stats
 		end
 
 		def rules_per_port_class(class_name)
@@ -41,8 +43,6 @@ module Classbench
 		end
 
 		def generate_seed
-			calculate_stats
-
 			seed = ""
 			seed += "-scale\n#{rules.size}\n#\n"
 
