@@ -188,7 +188,7 @@ module Classbench
 				lengths_of_class = port_class_prefix_lengths[r.port_class_name]
 
 				specific_length = lengths_of_class[r.src_length + r.dst_length] ||= {}
-				specific_length[r.dst_length] = (specific_length[r.dst_length] || 0) + 1
+				specific_length[r.src_length] = (specific_length[r.src_length] || 0) + 1
 			end
 		end
 
