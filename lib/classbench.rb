@@ -52,15 +52,15 @@ module Classbench
 		ignored, status = Process::waitpid2 pid
 
 		if status.exitstatus == 0
-			puts stdout.read.strip
+			STDOUT.puts stdout.read.strip
 			if logs_enabled
 				warnings = stderr.read.strip
 				if !warnings.to_s.empty?				
-					puts warnings
+					STDERR.puts warnings
 				end
 			end	
 		else
-			puts stderr.read.strip
+			STDERR.puts stderr.read.strip
 			exit(status.exitstatus)
 		end		
 		
