@@ -10,16 +10,14 @@ ClassBench-ng
 
 Usage:
   #{__FILE__} analyse of FILE
-  #{__FILE__} analyse tuples --rules=<file> --format=<file> [--logs]
+  #{__FILE__} analyse tuples FILE FORMAT [-l]
   #{__FILE__} generate v4 SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} generate v6 SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} generate of SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} -h | --help
 
 Options:
-  --rules=<file>            Path to file with filter rules. 
-  --format=<file>           Path to file with format of rules.
-  --logs                    Enable printing error logs during processing of filter rules. 
+  -l                        Enable printing analysis error logs.
   --db-generator=<path>     Path to an original ClassBench binary.
                             [default: ./vendor/db_generator/db_generator]
   --count=<n>               The number of rules to be generated.
@@ -61,7 +59,7 @@ begin
 		if opts["of"]
 			Classbench::analyse_of(opts["FILE"])
 		elsif opts["tuples"]
-			Classbench::analyse_tuples(opts["--rules"], opts["--format"], opts["--logs"])
+			Classbench::analyse_tuples(opts["FILE"], opts["FORMAT"], opts["-l"])
 		end
 	elsif opts["generate"]
 		if opts["v4"]
