@@ -42,27 +42,19 @@ module Classbench
 
 	end
 
-	def self.analyse_tuples(rules_filename, format_filename, output_filename, logs_enabled)
-		if logs_enabled and !output_filename.to_s.empty?
-			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename, "-o", output_filename, "-l")
-		elsif logs_enabled
+	def self.analyse_tuples(rules_filename, format_filename, logs_enabled)
+		if logs_enabled
 			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename, "-l")
-		elsif !output_filename.to_s.empty?
-			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename, "-o", output_filename)
 		else
 			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename)
 		end
 
 		ignored, status = Process::waitpid2 pid
-		
+
 		if status.exitstatus == 0
-			if output_filename.to_s.empty?			
-				puts stdout.read.strip
-			end
-			
+			puts stdout.read.strip
 			if logs_enabled
 				warnings = stderr.read.strip
-
 				if !warnings.to_s.empty?				
 					puts warnings
 				end
