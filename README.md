@@ -6,6 +6,7 @@ The format of the generated rules can be one of the following:
 - OpenFlow
 
 ## Requirements
+- Python3
 - Ruby 1.9.3+
 - RubyGems
 ```
@@ -40,14 +41,27 @@ Basic characteristics of patches available in `./patches` directory and suggesti
 
 ## Usage
 ClassBench-ng can be used in two different ways:
-- To analyse an existing rule set and extract the associated ClassBench-ng SEED.
+- To analyse an existing rule set and extract a corresponding SEED.
 - To generate a synthetic rule set from an input SEED.
 
+```
+./classbench -h | --help
+```
+Prints detailed usage information.
+
 ### ClassBench-ng Analyser
-The current version of the analyser supports only OpenFlow rules.
+The current version can successfully analyse IPv4 5-tuples and OpenFlow rules.
 
 ```
-./classbench analyse FILE
+./classbench analyse tuples FILE FORMAT [-l]
+```
+Analyses FILE, expecting FILE to be in the format specified in FORMAT (see `./lib/tuples_analyzer/README` for more information on how to specify the format).
+- `-l` enables printing analysis error logs.
+
+The output is an original ClassBench seed.
+
+```
+./classbench analyse of FILE
 ```
 Analyses FILE, expecting FILE to be in the format used by `ovs-ofctl`.
 Fields extracted from FILE are:
@@ -89,11 +103,6 @@ Generates OpenFlow rules following the properties from SEED that has to contain 
 - `--db-generator=<path>` specifies the path to an original ClassBench binary (default: `./vendor/db_generator/db_generator`)
 
 The output consists of `attribute=value` pairs joined by `, `.
-
-```
-./classbench -h | --help
-```
-Prints detailed usage information.
 
 ## Known Issues
 - the number of generated rules is usually lower than in original ClassBench (i.e., ClassBench-ng generates higher number of redundant rules that are removed in the last phase)

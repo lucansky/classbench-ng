@@ -9,27 +9,27 @@ ClassBench-ng
   A tool for generation of synthetic classification rule sets for benchmarking.
 
 Usage:
-  #{__FILE__} analyse FILE
+  #{__FILE__} analyse tuples FILE FORMAT [-l]
+  #{__FILE__} analyse of FILE
   #{__FILE__} generate v4 SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} generate v6 SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} generate of SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} -h | --help
 
 Options:
+  -l                        Enable printing analysis error logs.
   --db-generator=<path>     Path to an original ClassBench binary.
                             [default: ./vendor/db_generator/db_generator]
   --count=<n>               The number of rules to be generated.
                             [default: 100]
   -h --help                 Show this screen.
 
-Analyser accepts as an input an ovs-ofctl dump.
-Fields extracted from the dump are:
-	- in_port,
-	- dl_src, dl_dst, eth_type, dl_vlan, dl_vlan_pcp,
-	- nw_src, nw_dst, nw_tos, nw_proto,
-	- tp_src, tp_dst
-The output is an original ClassBench seed with an OpenFlow YAML structure as
-the last section.
+Analyser accepts as an input either a rule set in a given format in case of
+"analyse tuples" (the expected structure of a format file is described in
+lib/tuples_analyzer/README, section 7) or an ovs-ofctl dump in case of
+"analyse of".
+The output is an original ClassBench seed or this seed with an OpenFlow YAML
+structure as the last section, respectively.
 
 Generator accepts as an input an original ClassBench seed that has to contain
 an OpenFlow section in case of "generate of".
@@ -44,7 +44,11 @@ DOCOPT
 begin
 	opts = Docopt::docopt(doc)
 	if opts["analyse"]
-		Classbench::analyse(opts["FILE"])
+		if opts["tuples"]
+			Classbench::analyse_tuples(opts["FILE"], opts["FORMAT"], opts["-l"])
+		elsif opts["of"]
+			Classbench::analyse_of(opts["FILE"])
+		end
 	elsif opts["generate"]
 		if opts["v4"]
 			Classbench::generate("v4", opts["SEED"], (opts["--count"].to_i), opts["--db-generator"])

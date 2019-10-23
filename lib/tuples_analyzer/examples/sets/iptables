@@ -1,0 +1,5 @@
+iptables -A INPUT -s 10.0.0.0/24 -p tcp --dport 0:1023 -j ACCEPT
+iptables -A INPUT -s 128.0.0.0/24 -p tcp --sport all -j ACCEPT
+iptables -I INPUT -s 192.0.0.1 -p udp --dport 80 -j DROP
+iptables -I INPUT -s 192.0.0.0/3 -p udp --dport 1024:65535 -j DROP
+iptables -I INPUT -s 192.0.0.0/3 -p udp --dport 5000:5100 -j ACCEPT
