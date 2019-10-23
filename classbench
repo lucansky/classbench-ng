@@ -24,24 +24,12 @@ Options:
                             [default: 100]
   -h --help                 Show this screen.
 
-Analyser launched with arguments: "analyse of", accepts as an input an ovs-ofctl dump.
-Fields extracted from the dump are:
-	- in_port,
-	- dl_src, dl_dst, eth_type, dl_vlan, dl_vlan_pcp,
-	- nw_src, nw_dst, nw_tos, nw_proto,
-	- tp_src, tp_dst
-The output is an original ClassBench seed with an OpenFlow YAML structure as
-the last section.
-
-Analyser launched with arguments: "analyse tuples", accepts any filter rule sets format but file, 
-describing format of rules in set, has to be given to analyser as argument. 
-How to define file with format is described in file lib/tuples_analyzer/README.
-In folder lib/tuples_analyzer/examples there are also examples of filter rule sets and 
-formats belonging to them.
-Fields extracted from the rules are parts of standard IP 5-tuple: 
-(protocol, source IPv4 address, source port or source port range, destination IPv4 address, 
-destination port or destination port range)
-The output is an original ClassBench seed without OpenFlow YAML structure.
+Analyser accepts as an input either a rule set in a given format in case of
+"analyse tuples" (the expected structure of a format file is described in
+lib/tuples_analyzer/README, section 7) or an ovs-ofctl dump in case of
+"analyse of".
+The output is an original ClassBench seed or this seed with an OpenFlow YAML
+structure as the last section, respectively.
 
 Generator accepts as an input an original ClassBench seed that has to contain
 an OpenFlow section in case of "generate of".
