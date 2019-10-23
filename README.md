@@ -43,6 +43,11 @@ ClassBench-ng can be used in two different ways:
 - To analyse an existing rule set and extract a corresponding SEED.
 - To generate a synthetic rule set from an input SEED.
 
+```
+./classbench -h | --help
+```
+Prints detailed usage information.
+
 ### ClassBench-ng Analyser
 The current version can successfully analyse IPv4 5-tuples and OpenFlow rules.
 
@@ -97,11 +102,6 @@ Generates OpenFlow rules following the properties from SEED that has to contain 
 - `--db-generator=<path>` specifies the path to an original ClassBench binary (default: `./vendor/db_generator/db_generator`)
 
 The output consists of `attribute=value` pairs joined by `, `.
-
-```
-./classbench -h | --help
-```
-Prints detailed usage information.
 
 ## Known Issues
 - the number of generated rules is usually lower than in original ClassBench (i.e., ClassBench-ng generates higher number of redundant rules that are removed in the last phase)
