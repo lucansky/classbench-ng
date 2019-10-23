@@ -9,8 +9,8 @@ ClassBench-ng
   A tool for generation of synthetic classification rule sets for benchmarking.
 
 Usage:
-  #{__FILE__} analyse of FILE
   #{__FILE__} analyse tuples FILE FORMAT [-l]
+  #{__FILE__} analyse of FILE
   #{__FILE__} generate v4 SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} generate v6 SEED [--count=<n>] [--db-generator=<path>]
   #{__FILE__} generate of SEED [--count=<n>] [--db-generator=<path>]
@@ -44,10 +44,10 @@ DOCOPT
 begin
 	opts = Docopt::docopt(doc)
 	if opts["analyse"]
-		if opts["of"]
-			Classbench::analyse_of(opts["FILE"])
-		elsif opts["tuples"]
+		if opts["tuples"]
 			Classbench::analyse_tuples(opts["FILE"], opts["FORMAT"], opts["-l"])
+		elsif opts["of"]
+			Classbench::analyse_of(opts["FILE"])
 		end
 	elsif opts["generate"]
 		if opts["v4"]

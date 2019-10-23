@@ -32,16 +32,6 @@ module Classbench
 		t
 	end
 
-	def self.analyse_of(filename)
-		analyser = Analyser.new
-		analyser.parse_openflow(File.read(filename))
-
-		analyser.calculate_stats
-
-		puts analyser.generate_seed
-
-	end
-
 	def self.analyse_tuples(rules_filename, format_filename, logs_enabled)
 		if logs_enabled
 			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename, "-l")
@@ -65,6 +55,16 @@ module Classbench
 		end		
 		
 	end		
+
+	def self.analyse_of(filename)
+		analyser = Analyser.new
+		analyser.parse_openflow(File.read(filename))
+
+		analyser.calculate_stats
+
+		puts analyser.generate_seed
+
+	end
 
 	def self.generate(format, filename, count, db_generator_path)
 		generator = Generator.new(filename, db_generator_path)
