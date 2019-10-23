@@ -6,6 +6,7 @@ The format of the generated rules can be one of the following:
 - OpenFlow
 
 ## Requirements
+- Python3
 - Ruby 1.9.3+
 - RubyGems
 ```
