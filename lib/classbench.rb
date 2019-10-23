@@ -60,8 +60,6 @@ module Classbench
 		analyser = Analyser.new
 		analyser.parse_openflow(File.read(filename))
 
-		analyser.calculate_stats
-
 		puts analyser.generate_seed
 
 	end
