@@ -40,16 +40,20 @@ Basic characteristics of patches available in `./patches` directory and suggesti
 
 ## Usage
 ClassBench-ng can be used in two different ways:
-- To analyse an existing rule set and extract the associated ClassBench-ng SEED.
+- To analyse an existing rule set and extract a corresponding SEED.
 - To generate a synthetic rule set from an input SEED.
 
 ### ClassBench-ng Analyser
-ClassBench-ng offers two versions of the analysers: OpenFlow analyser and Tuples analyser. 
+The current version can successfully analyse IPv4 5-tuples and OpenFlow rules.
 
-#### OpenFlow Analyser
-First version of analyser supports only OpenFlow rules.
-The output is an original ClassBench seed with an OpenFlow YAML structure as the last section.
-This version can be run with these arguments:
+```
+./classbench analyse tuples FILE FORMAT [-l]
+```
+Analyses FILE, expecting FILE to be in the format specified in FORMAT (see `./lib/tuples_analyzer/README` for more information on how to specify the format).
+- `-l` enables printing analysis error logs.
+
+The output is an original ClassBench seed.
+
 ```
 ./classbench analyse of FILE
 ```
@@ -60,24 +64,7 @@ Fields extracted from FILE are:
 - nw_src, nw_dst, nw_tos, nw_proto,
 - tp_src, tp_dst
 
-#### OpenFlow Analyser
-Second version of analyser accepts any filter rule sets format but file, 
-describing format of rules in set, has to be given to analyser as argument.
-How to define file with format is described in file lib/tuples_analyzer/README.
-In folder lib/tuples_analyzer/examples there are also examples of filter rule sets and 
-files with formats of rules defined to them.
-Fields extracted from rules are only parts of standard IP 5-tuple: 
-(protocol, source IPv4 address, source port or source port range, destination IPv4 address, 
-destination port or destination port range)
-The output is an original ClassBench seed without OpenFlow YAML structure.
-It can be run with these arguments:
-```
-./classbench analyse tuples --rules=<file> --format=<file>  [--output=<file>] [--logs]
-```
-- `--rules=<file>` specifies the path to file with filter rules
-- `--format=<file>` specifies the path to file with format of rules
-- `--output=<file>` specifies the path to output file
-- `--logs` enables printing error logs during processing of filter rules
+The output is an original ClassBench seed with an OpenFlow YAML structure as the last section.
 
 ### ClassBench-ng Rule Generator
 The current version can successfully generate IPv4, IPv6 and OpenFlow 1.0 flow rules.
