@@ -204,15 +204,17 @@ class FilterRule:
                 self.dst_port = port + ':' + port
                 self.dst_port_class = PC.EM
 
-    def set_ip_add(self, ip_address, location):
+    def set_ip_add(self, ip_address, location, is_ipv6):
         """
-        Function takes parameter ip address in decimal form and sets instance variable source or destination ip_add_bin
+        Function takes parameter ip address and sets instance variable source or destination ip_add_bin
         as binary form of that ip address. It also sets instance variable source or destination ip_add_prefix_length
         with ip address prefix length.
 
-        :param ip_address: Ip address with prefix length in decimal form.
+        :param ip_address: Ip address with prefix length.
 
         :param location: Location of ip address (source/destination).
+
+        :param is_ipv6: True, if it is IPv6 address.
         """
         if location == FilterRulePartLocation.SOURCE:
             if ip_address == 'any':
@@ -220,12 +222,18 @@ class FilterRule:
                 self.src_ip_add_prefix_length = 0
             else:
                 ip_address = ip_address.split('/')
-                bin_ip_address = bin(int(ipaddress.IPv4Address(ip_address[0])))
-                bin_ip_address = bin_ip_address[2:].zfill(32)
                 prefix_length = int(ip_address[1])
+                self.src_ip_add_prefix_length = prefix_length
+
+                if not is_ipv6:
+                    bin_ip_address = bin(int(ipaddress.IPv4Address(ip_address[0])))
+                    bin_ip_address = bin_ip_address[2:].zfill(32)
+                else:
+                    bin_ip_address = bin(int(ipaddress.IPv6Address(ip_address[0])))
+                    bin_ip_address = bin_ip_address[2:].zfill(128)
+
                 binary_ip_address_cut = bin_ip_address[:prefix_length]
                 self.src_ip_add_bin = binary_ip_address_cut
-                self.src_ip_add_prefix_length = prefix_length
 
         elif location == FilterRulePartLocation.DESTINATION:
             if ip_address == 'any':
@@ -233,10 +241,15 @@ class FilterRule:
                 self.dst_ip_add_prefix_length = 0
             else:
                 ip_address = ip_address.split('/')
-                bin_ip_address = bin(int(ipaddress.IPv4Address(ip_address[0])))
-                bin_ip_address = bin_ip_address[2:].zfill(32)
                 prefix_length = int(ip_address[1])
-                binary_ip_address_cut = bin_ip_address[:prefix_length]
-                self.dst_ip_add_bin = binary_ip_address_cut
                 self.dst_ip_add_prefix_length = prefix_length
 
+                if not is_ipv6:
+                    bin_ip_address = bin(int(ipaddress.IPv4Address(ip_address[0])))
+                    bin_ip_address = bin_ip_address[2:].zfill(32)
+                else:
+                    bin_ip_address = bin(int(ipaddress.IPv6Address(ip_address[0])))
+                    bin_ip_address = bin_ip_address[2:].zfill(128)
+
+                binary_ip_address_cut = bin_ip_address[:prefix_length]
+                self.dst_ip_add_bin = binary_ip_address_cut
