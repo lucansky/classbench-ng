@@ -50,7 +50,7 @@ ClassBench-ng can be used in two different ways:
 Prints detailed usage information.
 
 ### ClassBench-ng Analyser
-The current version can successfully analyse IPv4 5-tuples and OpenFlow rules.
+The current version can successfully analyse IPv4 5-tuples, IPv6 5-tuples, and OpenFlow rules.
 
 ```
 ./classbench analyse tuples FILE FORMAT [-l]
@@ -107,7 +107,6 @@ The output consists of `attribute=value` pairs joined by `, `.
 ## Known Issues
 - the number of generated rules is usually lower than in original ClassBench (i.e., ClassBench-ng generates higher number of redundant rules that are removed in the last phase)
 - ClassBench-ng Analyser does not correctly analyses source/destination port prefixes specified using a bit map in the ovs-ofctl format
-- ClassBench-ng Analyser is not able to analyse rule sets with source/destination IPv6 prefixes
 
 ## How to Contribute
 Contributions are welcome via:
