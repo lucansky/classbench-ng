@@ -13,10 +13,10 @@ class FilterRulePartType(Enum):
     """Representation of wildcard value."""
     PROTOCOL = 1
     """Network protocol abbreviation."""
-    IP_ADDRESS = 2
-    """IP address without mask."""
-    IP_ADDRESS_MASK = 3
-    """IP address with mask."""
+    IPV4_ADDRESS = 2
+    """IPv4 address without mask."""
+    IPV4_ADDRESS_MASK = 3
+    """IPv4 address with mask."""
     PORT = 4
     """Port value."""
     PORT_RANGE = 5
@@ -27,4 +27,7 @@ class FilterRulePartType(Enum):
     """Word which is part of rule format definition e.g. from, to."""
     WORD = 8
     """Every other value."""
-
+    IPV6_ADDRESS = 9
+    """IPv6 address without mask."""
+    IPV6_ADDRESS_MASK = 10
+    """IPv6 address with mask."""

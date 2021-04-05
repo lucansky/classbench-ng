@@ -145,8 +145,11 @@ class FilterRuleGenerator:
         if part_type == FilterRulePartType.ANY:
             part = "any"
 
-        if part_type == FilterRulePartType.IP_ADDRESS:
+        if part_type == FilterRulePartType.IPV4_ADDRESS:
             part += '/32'
+
+        if part_type == FilterRulePartType.IPV6_ADDRESS:
+            part += '/128'
 
         if ((expected_part_type == "PROTOCOL" or expected_part_type == "PROTOCOL?") and
                 (part_type == FilterRulePartType.ANY or part_type == FilterRulePartType.PROTOCOL)):
@@ -171,16 +174,20 @@ class FilterRuleGenerator:
             filter_rule.set_port(part, FilterRulePartLocation.DESTINATION)
 
         elif ((expected_part_type == "SRC_IP" or expected_part_type == "SRC_IP?") and
-              (part_type == FilterRulePartType.ANY or part_type == FilterRulePartType.IP_ADDRESS_MASK
-              or part_type == FilterRulePartType.IP_ADDRESS)):
+              (part_type == FilterRulePartType.ANY or part_type == FilterRulePartType.IPV4_ADDRESS_MASK
+               or part_type == FilterRulePartType.IPV6_ADDRESS or part_type == FilterRulePartType.IPV6_ADDRESS_MASK
+               or part_type == FilterRulePartType.IPV4_ADDRESS)):
 
-            filter_rule.set_ip_add(part, FilterRulePartLocation.SOURCE)
+            is_ipv6 = part_type == FilterRulePartType.IPV6_ADDRESS or part_type == FilterRulePartType.IPV6_ADDRESS_MASK
+            filter_rule.set_ip_add(part, FilterRulePartLocation.SOURCE, is_ipv6)
 
         elif ((expected_part_type == "DST_IP" or expected_part_type == "DST_IP?") and
-              (part_type == FilterRulePartType.ANY or part_type == FilterRulePartType.IP_ADDRESS_MASK
-              or part_type == FilterRulePartType.IP_ADDRESS)):
+              (part_type == FilterRulePartType.ANY or part_type == FilterRulePartType.IPV4_ADDRESS_MASK
+               or part_type == FilterRulePartType.IPV6_ADDRESS or part_type == FilterRulePartType.IPV6_ADDRESS_MASK
+               or part_type == FilterRulePartType.IPV4_ADDRESS)):
 
-            filter_rule.set_ip_add(part, FilterRulePartLocation.DESTINATION)
+            is_ipv6 = part_type == FilterRulePartType.IPV6_ADDRESS or part_type == FilterRulePartType.IPV6_ADDRESS_MASK
+            filter_rule.set_ip_add(part, FilterRulePartLocation.DESTINATION, is_ipv6)
 
         elif ((expected_part_type == "NUMBER" or expected_part_type == "NUMBER?") and
               (part_type == FilterRulePartType.NUMBER or part_type == FilterRulePartType.PORT)):
@@ -256,11 +263,17 @@ class FilterRuleGenerator:
         elif FilterRuleGenerator.is_protocol(part):
             return FilterRulePartType.PROTOCOL
 
-        elif FilterRuleGenerator.is_ip_address(part):
-            return FilterRulePartType.IP_ADDRESS
+        elif FilterRuleGenerator.is_ipv4_address(part):
+            return FilterRulePartType.IPV4_ADDRESS
 
-        elif FilterRuleGenerator.is_ip_address_with_mask(part):
-            return FilterRulePartType.IP_ADDRESS_MASK
+        elif FilterRuleGenerator.is_ipv4_address_with_mask(part):
+            return FilterRulePartType.IPV4_ADDRESS_MASK
+
+        elif FilterRuleGenerator.is_ipv6_address(part):
+            return FilterRulePartType.IPV6_ADDRESS
+
+        elif FilterRuleGenerator.is_ipv6_address_with_mask(part):
+            return FilterRulePartType.IPV6_ADDRESS_MASK
 
         elif FilterRuleGenerator.is_port(part):
             return FilterRulePartType.PORT
@@ -366,13 +379,13 @@ class FilterRuleGenerator:
             return False
 
     @staticmethod
-    def is_ip_address(ip_address):
+    def is_ipv4_address(ip_address):
         """
-        Function returns true, if parameter of function is IP address in decimal form without mask (prefix length).
+        Function returns true, if parameter of function is IPv4 address in decimal form without mask (prefix length).
 
-        :param ip_address: String with possible IP address in decimal form.
+        :param ip_address: String with possible IPv4 address in decimal form.
 
-        :return: True, if parameter of function is IP address.
+        :return: True, if parameter of function is IPv4 address.
         """
         try:
             ipaddress.IPv4Address(ip_address)
@@ -382,18 +395,52 @@ class FilterRuleGenerator:
         return True
 
     @staticmethod
-    def is_ip_address_with_mask(ip_address):
+    def is_ipv4_address_with_mask(ip_address):
         """
-        Function returns true, if parameter of function is IP address in decimal form with mask (prefix length).
+        Function returns true, if parameter of function is IPv4 address in decimal form with mask (prefix length).
 
-        :param ip_address: String with possible IP address with mask in decimal form.
+        :param ip_address: String with possible IPv4 address with mask in decimal form.
 
-        :return: True, if parameter of function is IP address with mask.
+        :return: True, if parameter of function is IPv4 address with mask.
         """
         possible_address = ip_address.split('/')
 
         if len(possible_address) != 2 or not possible_address[1].isdigit() or int(possible_address[1]) < 0 or int(
-                possible_address[1]) > 32 or not FilterRuleGenerator.is_ip_address(possible_address[0]):
+                possible_address[1]) > 32 or not FilterRuleGenerator.is_ipv4_address(possible_address[0]):
+            return False
+
+        return True
+
+
+    @staticmethod
+    def is_ipv6_address(ip_address):
+        """
+        Function returns true, if parameter of function is IPv6 address without mask (prefix length).
+
+        :param ip_address: String with possible IPv6 address.
+
+        :return: True, if parameter of function is IPv6 address.
+        """
+        try:
+            ipaddress.IPv6Address(ip_address)
+        except ipaddress.AddressValueError:
+            return False
+
+        return True
+
+    @staticmethod
+    def is_ipv6_address_with_mask(ip_address):
+        """
+        Function returns true, if parameter of function is IPv6 address with mask (prefix length).
+
+        :param ip_address: String with possible IPv6 address with mask.
+
+        :return: True, if parameter of function is IPv6 address with mask.
+        """
+        possible_address = ip_address.split('/')
+
+        if len(possible_address) != 2 or not possible_address[1].isdigit() or int(possible_address[1]) < 0 or int(
+                possible_address[1]) > 128 or not FilterRuleGenerator.is_ipv6_address(possible_address[0]):
             return False
 
         return True

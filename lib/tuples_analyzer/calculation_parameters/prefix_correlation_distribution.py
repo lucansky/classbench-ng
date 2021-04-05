@@ -15,11 +15,11 @@ class PrefixCorrelationDistribution(IParameter):
     def __init__(self):
         """
         Constructor initialize two instance variable as lists with zero values.
-        Both lists are sizes of 32. Indexes of lists are representing prefix levels.
+        Both lists are sizes of 128. Indexes of lists are representing prefix levels.
         """
-        self.all_on_level = [0] * 32
+        self.all_on_level = [0] * 128
         """List with counts of rules which have same source and destination prefixes until previous level."""
-        self.same_on_level = [0] * 32
+        self.same_on_level = [0] * 128
         """List with counts of rules which source and destination prefixes are same on level."""
 
     def extract_data(self, filter_rule):
@@ -59,6 +59,10 @@ class PrefixCorrelationDistribution(IParameter):
         first = True
 
         for rules_count in self.all_on_level:
+
+            # at least 32 will be printed
+            if i > 32 and rules_count == 0:
+                break
 
             # for first correlation we do not want print new line
             if first:

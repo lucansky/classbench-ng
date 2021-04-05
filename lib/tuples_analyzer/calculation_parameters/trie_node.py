@@ -21,7 +21,7 @@ class TrieNode:
         self.prefix = False
         """Instance variable prefix is boolean type and is telling, if node is prefix or only node on path to prefix."""
         self.level = 0
-        """Prefix level of node in trie (0-32)."""
+        """Prefix level of node in trie."""
         self.children = []
         """List holding instances of children nodes. Trie node can have max. 2 children."""
         self.prefixes = [0, 0]

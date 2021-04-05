@@ -48,20 +48,20 @@
 	value is expected on same position in rule. What every parameter represents is described in this list:
 
 		PROTOCOL				network protocol abbreviation
-		SRC_IP					source IPv4 address
+		SRC_IP					source IPv4 or IPv6 address
 		SRC_PORT				source port or port range
-		DST_IP					destination IPv4 address
+		DST_IP					destination IPv4 or IPv6 address
 		DST_PORT				destination port or port range
 		NUMBER					some number, not used for computation parameters
-		WILDCARD                		some string, not used for computation parameters
+		WILDCARD				some string, not used for computation parameters
 
 	b.)supported representation of parameters in rules
 
-	Supported IPv4 address definitions in rules are: 10.0.0.0/24, 192.168.0.33 (with or without mask in digit form)
-	Supported port definitions in rules are: 80, 0:1023 (port or port range)
-	Supported network protocol case-insensitive abbreviations in rules are:
+	Supported IPv4 and IPv6 address definitions are with or without mask in digit form, e.g.: 2001:db8:a::/64, 192.168.0.33
+	Supported port definitions are port number or port range, e.g.: 80, 0:1023
+	All supported network protocol case-insensitive abbreviations are:
 	'ICMP', 'IGMP', 'GGP', 'ST', 'TCP', 'EGP', 'UDP', 'GRE', 'ESP', 'AH', 'EIGRP', 'OSPFIGP'
-	Supported wildcard values of parameters in rules are: 'any', 'all', ''*', 'ip', '0'
+	All supported wildcard values of parameters are: 'any', 'all', '*', 'ip', '0'
 
 	b.)keywords
 
@@ -82,25 +82,29 @@
 
 
 8.FORMAT OF RULES EXAMPLES:
-	Example sets, formats and correct outputs are located in examples folder.
+	Example sets and formats are located in examples folder.
 
-	a.) format1:
+	a.) custom1.format:
 	PROTOCOL from SRC_IP SRC_PORT to DST_IP DST_PORT
 
-	b.) format2:
+	b.) custom2.format:
 	PROTOCOL destination DST_IP ip-port? DST_PORT? source SRC_IP ip-port? SRC_PORT?
 
-	c.) openflow:
+	c.)custom_with_ipv6.format:
+	rule NUMBER WILDCARD PROTOCOL source? SRC_IP? destination? DST_IP? destination-port DST_PORT?
+
+	d.) openflow.format:
 	nw_proto=PROTOCOL, nw_src?=SRC_IP?, nw_dst?=DST_IP?, tp_src?=SRC_PORT?, tp_dst?=DST_PORT?
 
-	d.)iptables long format:
+	e.)iptables_long.format (long format):
 	iptables WILDCARD WILDCARD --source? SRC_IP? --destination? DST_IP? --protocol? PROTOCOL? --source-port? SRC_PORT? --destination-port? DST_PORT? -j WILDCARD
 
-	e.)iptables short format:
+	f.)iptables_short.format (short format):
 	iptables WILDCARD WILDCARD -s? SRC_IP? -d? DST_IP? -p? PROTOCOL? --sport? SRC_PORT? --dport? DST_PORT? -j WILDCARD
 
-	f.)ipfw format:
+	g.)ipfw.format:
 	ipfw add WILDCARD PROTOCOL? from SRC_IP? SRC_PORT? to DST_IP? DST_PORT?
+
 
 9.AUTHOR:
 	Jozef Sabo

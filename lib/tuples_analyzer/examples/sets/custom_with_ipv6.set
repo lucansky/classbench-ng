@@ -1,0 +1,6 @@
+rule 1 permit tcp source 147.240.1.0/24 destination-port 1
+rule 2 permit tcp destination 147.10.10.1/32 destination-port smtp
+rule 3 permit udp source fd6d:fa5:24bc:a286::/64 destination-port 2:10
+rule 4 deny   udp destination 2001:ABC:1230::/48 destination-port 11
+rule 5 permit tcp destination 2001:ABC:1230::1234:123/128  destination-port 11
+rule 6 permit tcp source 2001:67B:1220:F000::/52 destination 2001:FED:1230::/48 destination-port 12:300
