@@ -1,0 +1,58 @@
+nw_proto=0 ,nw_src=147.229.35.0/24 ,nw_dst=147.229.37.9/32
+nw_proto=6 ,nw_dst=147.229.37.9/32 ,tp_dst=443
+nw_proto=6 ,nw_src=147.229.32.0/20 ,nw_dst=147.229.37.9/32 ,tp_dst=80
+nw_proto=6 ,nw_src=147.229.82.0/23 ,nw_dst=147.229.37.9/32 ,tp_dst=80
+nw_proto=6 ,nw_src=147.229.84.0/22 ,nw_dst=147.229.37.9/32 ,tp_dst=80
+nw_proto=6 ,nw_src=147.229.128.0/20 ,nw_dst=147.229.37.9/32 ,tp_dst=80
+nw_proto=6 ,nw_dst=147.229.37.9/32
+nw_proto=0 ,nw_src=147.229.35.0/24 ,nw_dst=147.229.87.12/30
+nw_proto=0 ,nw_src=147.229.37.0/24 ,nw_dst=147.229.87.12/30
+nw_proto=0 ,nw_src=147.229.87.0/24 ,nw_dst=147.229.87.12/30
+nw_proto=0 ,nw_src=147.229.128.248/29 ,nw_dst=147.229.87.12/30
+nw_proto=0 ,nw_dst=147.229.87.12/30
+nw_proto=0 ,nw_src=147.229.35.0/24 ,nw_dst=147.229.128.0/24
+nw_proto=0 ,nw_src=147.229.37.0/24 ,nw_dst=147.229.128.0/24
+nw_proto=0 ,nw_src=147.229.128.0/24 ,nw_dst=147.229.128.0/24
+nw_proto=0 ,nw_src=147.229.87.12/30 ,nw_dst=147.229.128.248/29
+nw_proto=0 ,nw_src=147.229.131.230/32 ,nw_dst=147.229.128.64/28
+nw_proto=0 ,nw_src=147.229.0.0/16 ,nw_dst=147.229.128.79/32
+nw_proto=0 ,nw_src=147.229.153.0/24 ,nw_dst=147.229.128.128/28
+nw_proto=0 ,nw_src=147.229.0.0/16 ,nw_dst=147.229.128.248/29
+nw_proto=0 ,nw_dst=147.229.128.0/24
+nw_proto=0 ,nw_src=147.229.35.0/24 ,nw_dst=147.229.131.240/28
+nw_proto=0 ,nw_src=147.229.37.0/24 ,nw_dst=147.229.131.240/28
+nw_proto=0 ,nw_src=147.229.185.0/24 ,nw_dst=147.229.131.240/28
+nw_proto=6 ,nw_src=147.229.131.240/28
+nw_proto=6 ,nw_dst=147.229.131.240/28
+nw_proto=0 ,nw_src=147.229.34.0/23 ,nw_dst=147.229.34.0/24
+nw_proto=0 ,nw_src=147.229.36.0/23 ,nw_dst=147.229.34.0/24
+nw_proto=0 ,nw_dst=147.229.34.0/28
+nw_proto=0 ,nw_dst=147.229.34.152/29
+nw_proto=6 ,nw_dst=147.229.34.0/24
+nw_proto=6 ,nw_dst=147.229.37.10/31 ,tp_dst=25
+nw_proto=6 ,nw_dst=147.229.37.12/31 ,tp_dst=25
+nw_proto=6 ,nw_src=147.229.32.0/20 ,tp_dst=25
+nw_proto=6 ,nw_src=147.229.82.0/23 ,tp_dst=25
+nw_proto=6 ,nw_src=147.229.84.0/22 ,tp_dst=25
+nw_proto=6 ,nw_src=147.229.128.0/20 ,tp_dst=25
+nw_proto=6 ,nw_dst=147.229.32.0/20 ,tp_dst=25
+nw_proto=6 ,nw_dst=147.229.82.0/23 ,tp_dst=25
+nw_proto=6 ,nw_dst=147.229.84.0/22 ,tp_dst=25
+nw_proto=6 ,nw_dst=147.229.128.0/20 ,tp_dst=25
+nw_proto=6 ,nw_src=147.229.0.0/16 ,nw_dst=147.229.37.128/25 ,tp_dst=80
+nw_proto=6 ,nw_dst=147.229.37.128/25 ,tp_dst=80
+nw_proto=6 ,nw_dst=147.229.35.90/32
+nw_proto=0 ,nw_src=147.229.32.0/20 ,nw_dst=147.229.35.90/32
+nw_proto=0 ,nw_src=147.229.2.218/31 ,nw_dst=147.229.131.240/28
+nw_proto=0 ,nw_src=147.229.131.243/32 ,nw_dst=147.229.2.218/31
+nw_proto=0 ,nw_src=147.229.2.218/31 ,nw_dst=147.229.131.243/32
+nw_proto=0 ,nw_src=147.229.131.243/32
+nw_proto=0 ,nw_src=147.229.131.230/32 ,nw_dst=147.229.128.80/28
+nw_proto=6 ,nw_src=147.229.137.176/32 ,nw_dst=147.229.131.244/30 ,tp_dst=80
+nw_proto=6 ,nw_src=62.84.154.90/32 ,nw_dst=147.229.131.244/30 ,tp_dst=80
+nw_proto=0 ,nw_src=147.229.43.128/28 ,nw_dst=147.229.43.0/24
+nw_proto=0 ,nw_src=147.229.43.144/30 ,nw_dst=147.229.43.0/24
+nw_proto=0 ,nw_src=147.229.43.128/28 ,nw_dst=147.229.37.0/25
+nw_proto=0 ,nw_src=147.229.43.144/30 ,nw_dst=147.229.37.0/25
+nw_proto=0 ,nw_src=147.229.43.128/28
+nw_proto=0 ,nw_src=147.229.43.144/30

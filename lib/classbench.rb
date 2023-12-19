@@ -32,23 +32,49 @@ module Classbench
 		t
 	end
 
-	def self.analyse(filename)
+	def self.analyse_tuples(rules_filename, format_filename, logs_enabled)
+		if logs_enabled
+			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename, "-l")
+		else
+			pid, stdin, stdout, stderr = Open4::popen4("python3", "-m", "lib.tuples_analyzer", "-r", rules_filename, "-f", format_filename)
+		end
+
+		ignored, status = Process::waitpid2 pid
+
+		if status.exitstatus == 0
+			STDOUT.puts stdout.read.strip
+			if logs_enabled
+				warnings = stderr.read.strip
+				if !warnings.to_s.empty?				
+					STDERR.puts warnings
+				end
+			end	
+		else
+			STDERR.puts stderr.read.strip
+			exit(status.exitstatus)
+		end		
+		
+	end		
+
+	def self.analyse_of(filename)
 		analyser = Analyser.new
 		analyser.parse_openflow(File.read(filename))
-
-		analyser.calculate_stats
 
 		puts analyser.generate_seed
 
 	end
 
-	def self.generate(filename, count, db_generator_path)
+	def self.generate(format, filename, count, db_generator_path)
 		generator = Generator.new(filename, db_generator_path)
-		has_openflow = generator.parse_seed
+		if format == "of"
+			if !generator.parse_seed
+				return
+			end
+		end
 
 		#puts  YAML.dump(generator.openflow_section)
-		rules = generator.generate_rules(count)
-		if has_openflow
+		rules = generator.generate_rules(format, count)
+		if format == "of"
 			rules.map!(&:to_vswitch_format)
 		end
 

@@ -1,0 +1,111 @@
+1.PROGRAM:
+	tuples_analyzer
+
+2.FUNCTION:
+	Program creates parameter file from statistics and distributions of real filter set.
+	File with format of rules is needed for processing filter rules. Format is described in section 7.
+	Computed parameters are then used to generate synthetic filter set by tools ClassBench and ClassBench-ng.
+
+3.USAGE:
+	python3 -m tuples_analyzer -r <rules_file> -f <format_file>  [-o <output_file>  -l -h]
+
+4.USAGE EXAMPLES:
+	a.) python3 -m tuples_analyzer -h
+	b.) python3 -m tuples_analyzer -r rules.txt -f format.txt
+	c.) python3 -m tuples_analyzer -r rules.txt -f format.txt -l
+	d.) python3 -m tuples_analyzer -r rules.txt -f format.txt -o output.txt
+	e.) python3 -m tuples_analyzer -r rules.txt -f format.txt -o output.txt -l
+
+5.MANDATORY ARGUMENTS:
+	-r rules_file  | --rules=rules_file			specify path to file with filter rules
+	-f format_file | --format=format_file			specify path to file with format of rules
+
+6.OPTIONAL ARGUMENTS:
+	-o output_file | --output=output_file			specify path to file, which will be created
+								to store computed parameters
+
+	-l | --logs						printing error logs during computation is enabled
+	-h | --help						display manual
+
+7.FORMAT OF RULES:
+	Format tells, how one rule in set should look like. Program loads format from first line of format file. Specify path to
+	file with argument '-f'.
+
+	Format of rule is sentence consisting of parameters and keywords. Parameters (specified uppercase words) are  like
+	variables. They always represent different value in filter rule than its notation in format. E.g. parameter 'PROTOCOL'
+	in format, represents network protocol abbreviation in rule (e.g. 'tcp'). Keywords in format are exactly same strings
+	in rule (e.g. 'from', 'to').
+
+	Order of placement parameters and keywords in format sentence is important. In process of parsing
+	rule, is from beginning of rule to its end checked, if every part of rule matches to its definition
+	in format. E.g. if format starts with 'from SRC_IP', it is expected, that first part of rule will be
+	'from' (same as 'from' in format) and second part will be ip address for example '10.10.10.0/24'
+	(parameter 'SRC_IP' representation). If order is not correct, rule will be ignored.
+
+	a.)parameters
+
+	Parameters (PROTOCOL, SRC_IP, SRC_PORT, DST_IP, DST_PORT, NUMBER, WILDCARD) in format definition tell, what type of
+	value is expected on same position in rule. What every parameter represents is described in this list:
+
+		PROTOCOL				network protocol abbreviation
+		SRC_IP					source IPv4 or IPv6 address
+		SRC_PORT				source port or port range
+		DST_IP					destination IPv4 or IPv6 address
+		DST_PORT				destination port or port range
+		NUMBER					some number, not used for computation parameters
+		WILDCARD				some string, not used for computation parameters
+
+	b.)supported representation of parameters in rules
+
+	Supported IPv4 and IPv6 address definitions are with or without mask in digit form, e.g.: 2001:db8:a::/64, 192.168.0.33
+	Supported port definitions are port number or port range, e.g.: 80, 0:1023
+	All supported network protocol case-insensitive abbreviations are:
+	'ICMP', 'IGMP', 'GGP', 'ST', 'TCP', 'EGP', 'UDP', 'GRE', 'ESP', 'AH', 'EIGRP', 'OSPFIGP'
+	All supported wildcard values of parameters are: 'any', 'all', '*', 'ip', '0'
+
+	b.)keywords
+
+	Keywords are every possible strings except all parameters and character '?'. Keywords in format definition tell,
+	that exactly same string value as keywords is expected on same position in rule. They does not represent valuable
+	content for computation parameters. They are usually used to introduce parameters. E.g. if you define your format
+	starting with 'from=SRC_IP', then rule definition in filter set can start with 'from=10.10.10.0/24'.
+
+	Characters ' ', ',', '=' (empty space, comma, equal) are used as separators between parameters and keywords
+	in format and also separators between parts in filter rules.
+
+	c.)optional parts
+
+	You can define optional parts of rule in your format definition, if you after parameter or keyword
+	add character '?'. E.g. if format ends with 'ip-port?=DST_PORT?', then at the end of rule is not
+	required any of these words 'ip-port' or '0:1023' (example of port range) but they can both
+	be there (of course in correct order).
+
+
+8.FORMAT OF RULES EXAMPLES:
+	Example sets and formats are located in examples folder.
+
+	a.) custom1.format:
+	PROTOCOL from SRC_IP SRC_PORT to DST_IP DST_PORT
+
+	b.) custom2.format:
+	PROTOCOL destination DST_IP ip-port? DST_PORT? source SRC_IP ip-port? SRC_PORT?
+
+	c.)custom_with_ipv6.format:
+	rule NUMBER WILDCARD PROTOCOL source? SRC_IP? destination? DST_IP? destination-port DST_PORT?
+
+	d.) openflow.format:
+	nw_proto=PROTOCOL, nw_src?=SRC_IP?, nw_dst?=DST_IP?, tp_src?=SRC_PORT?, tp_dst?=DST_PORT?
+
+	e.)iptables_long.format (long format):
+	iptables WILDCARD WILDCARD --source? SRC_IP? --destination? DST_IP? --protocol? PROTOCOL? --source-port? SRC_PORT? --destination-port? DST_PORT? -j WILDCARD
+
+	f.)iptables_short.format (short format):
+	iptables WILDCARD WILDCARD -s? SRC_IP? -d? DST_IP? -p? PROTOCOL? --sport? SRC_PORT? --dport? DST_PORT? -j WILDCARD
+
+	g.)ipfw.format:
+	ipfw add WILDCARD PROTOCOL? from SRC_IP? SRC_PORT? to DST_IP? DST_PORT?
+
+
+9.AUTHOR:
+	Jozef Sabo
+	xsaboj00@stud.fit.vutbr.cz

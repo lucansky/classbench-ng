@@ -1,0 +1,58 @@
+ip    destination 147.229.37.9/32                  source 147.229.35.0/24                 permit               ports any  precedence 101
+tcp   destination 147.229.37.9/32      ip-port 443 source any                 ip-port any permit               ports any  precedence 111
+tcp   destination 147.229.37.9/32      ip-port 80  source 147.229.32.0/20     ip-port any permit               ports any  precedence 121
+tcp   destination 147.229.37.9/32      ip-port 80  source 147.229.82.0/23     ip-port any permit               ports any  precedence 122
+tcp   destination 147.229.37.9/32      ip-port 80  source 147.229.84.0/22     ip-port any permit               ports any  precedence 123
+tcp   destination 147.229.37.9/32      ip-port 80  source 147.229.128.0/20    ip-port any permit               ports any  precedence 124
+tcp   destination 147.229.37.9/32      ip-port any source any                 ip-port any permit-established   ports any  precedence 141
+ip    destination 147.229.87.12/30                 source 147.229.35.0/24                 permit               ports any  precedence 201
+ip    destination 147.229.87.12/30                 source 147.229.37.0/24                 permit               ports any  precedence 202
+ip    destination 147.229.87.12/30                 source 147.229.87.0/24                 permit               ports any  precedence 203
+ip    destination 147.229.87.12/30                 source 147.229.128.248/29              permit               ports any  precedence 204
+ip    destination 147.229.87.12/30                 source any                             deny                 ports any  precedence 241
+ip    destination 147.229.128.0/24                 source 147.229.35.0/24                 permit               ports any  precedence 301
+ip    destination 147.229.128.0/24                 source 147.229.37.0/24                 permit               ports any  precedence 302
+ip    destination 147.229.128.0/24                 source 147.229.128.0/24                permit               ports any  precedence 303
+ip    destination 147.229.128.248/29               source 147.229.87.12/30                permit               ports any  precedence 311
+ip    destination 147.229.128.64/28                source 147.229.131.230/32              permit               ports any  precedence 321
+ip    destination 147.229.128.79/32                source 147.229.0.0/16                  permit               ports any  precedence 322
+ip    destination 147.229.128.128/28               source 147.229.153.0/24                permit               ports any  precedence 331
+ip    destination 147.229.128.248/29               source 147.229.0.0/16                  permit               ports any  precedence 341
+ip    destination 147.229.128.0/24                 source any                             deny                 ports any  precedence 361
+ip    destination 147.229.131.240/28               source 147.229.35.0/24                 permit               ports any  precedence 401
+ip    destination 147.229.131.240/28               source 147.229.37.0/24                 permit               ports any  precedence 402
+ip    destination 147.229.131.240/28               source 147.229.185.0/24                permit               ports any  precedence 403
+tcp   destination any                  ip-port any source 147.229.131.240/28  ip-port any permit               ports any  precedence 411
+tcp   destination 147.229.131.240/28   ip-port any source any                 ip-port any permit-established   ports any  precedence 441
+ip    destination 147.229.34.0/24                  source 147.229.34.0/23                 permit               ports any  precedence 501
+ip    destination 147.229.34.0/24                  source 147.229.36.0/23                 permit               ports any  precedence 502
+ip    destination 147.229.34.0/28                  source any                             permit               ports any  precedence 511
+ip    destination 147.229.34.152/29                source any                             permit               ports any  precedence 512
+tcp   destination 147.229.34.0/24      ip-port any source any                 ip-port any permit-established   ports any  precedence 541
+tcp   destination 147.229.37.10/31     ip-port 25  source any                 ip-port any permit               ports any  precedence 601
+tcp   destination 147.229.37.12/31     ip-port 25  source any                 ip-port any permit               ports any  precedence 602
+tcp   destination any                  ip-port 25  source 147.229.32.0/20     ip-port any permit               ports any  precedence 621
+tcp   destination any                  ip-port 25  source 147.229.82.0/23     ip-port any permit               ports any  precedence 622
+tcp   destination any                  ip-port 25  source 147.229.84.0/22     ip-port any permit               ports any  precedence 623
+tcp   destination any                  ip-port 25  source 147.229.128.0/20    ip-port any permit               ports any  precedence 624
+tcp   destination 147.229.32.0/20      ip-port 25  source any                 ip-port any deny                 ports any  precedence 641
+tcp   destination 147.229.82.0/23      ip-port 25  source any                 ip-port any deny                 ports any  precedence 642
+tcp   destination 147.229.84.0/22      ip-port 25  source any                 ip-port any deny                 ports any  precedence 643
+tcp   destination 147.229.128.0/20     ip-port 25  source any                 ip-port any deny                 ports any  precedence 644
+tcp   destination 147.229.37.128/25    ip-port 80  source 147.229.0.0/16      ip-port any permit               ports any  precedence 191
+tcp   destination 147.229.37.128/25    ip-port 80  source any                 ip-port any deny                 ports any  precedence 192
+tcp   destination 147.229.35.90/32     ip-port any source any                 ip-port any permit-established   ports any  precedence 709
+ip    destination 147.229.35.90/32                 source 147.229.32.0/20                 permit               ports any  precedence 701
+ip    destination 147.229.131.240/28               source 147.229.2.218/31                permit               ports any  precedence 404
+ip    destination 147.229.2.218/31                 source 147.229.131.243/32              permit               ports any  precedence 390
+ip    destination 147.229.131.243/32               source 147.229.2.218/31                permit               ports any  precedence 391
+ip    destination any                              source 147.229.131.243/32              permit               ports any  precedence 393
+ip    destination 147.229.128.80/28                source 147.229.131.230/32              permit               ports any  precedence 323
+tcp   destination 147.229.131.244/30   ip-port 80  source 147.229.137.176/32  ip-port any permit               ports any  precedence 421
+tcp   destination 147.229.131.244/30   ip-port 80  source 62.84.154.90/32     ip-port any permit               ports any  precedence 422
+ip    destination 147.229.43.0/24                  source 147.229.43.128/28               permit               ports any  precedence 551
+ip    destination 147.229.43.0/24                  source 147.229.43.144/30               permit               ports any  precedence 552
+ip    destination 147.229.37.0/25                  source 147.229.43.128/28               permit               ports any  precedence 553
+ip    destination 147.229.37.0/25                  source 147.229.43.144/30               permit               ports any  precedence 554
+ip    destination any                              source 147.229.43.128/28               deny                 ports any  precedence 561
+ip    destination any                              source 147.229.43.144/30               deny                 ports any  precedence 562

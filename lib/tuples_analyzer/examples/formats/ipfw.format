@@ -1,0 +1,1 @@
+ipfw add WILDCARD PROTOCOL? from SRC_IP? SRC_PORT? to DST_IP? DST_PORT?

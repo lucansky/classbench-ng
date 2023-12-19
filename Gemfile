@@ -9,3 +9,4 @@ end
 gem "docopt"
 gem "ruby-ip"
 gem "open4"
+gem "ipaddress"

@@ -32,11 +32,11 @@ module Classbench
 		end
 
 		def src_length
-			IPAddress.parse(attributes["nw_src"] || '0.0.0.0').prefix.to_i
+			IPAddress.parse(attributes["nw_src"] || '0.0.0.0/0').prefix.to_i
 		end
 
 		def dst_length
-			IPAddress.parse(attributes["nw_dst"] || '0.0.0.0').prefix.to_i
+			IPAddress.parse(attributes["nw_dst"] || '0.0.0.0/0').prefix.to_i
 		end
 
 		def remove_missing_attributes(attrs)
@@ -101,6 +101,7 @@ module Classbench
 
 		def to_vswitch_format
 			attributes.to_a.
+				reject {|k,v| k == "nw_proto" and v == 0}.  # nw_proto is removed when wildcard
 				reject {|k,v| v == (0..65535)}.  # tp_src and tp_dst is removed when wildcard
 				map {|k,v| (v.is_a?(Range) and v.first == v.last) ? [k, v.first] : [k,v] }. # if port range is [x..x] => x
 				map {|k,v| "#{k}=#{v}" }.join(", ") # Openflow format
