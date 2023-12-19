@@ -20,9 +20,9 @@ download:
 
 patch: download
 	# Apply patches from ../patches
-	git apply --directory=vendor/db_generator ../patches/improvements_ipv6.patch
-	#git apply --directory=vendor/db_generator ../patches/ipv6.patch
-	#git apply --directory=vendor/db_generator ../patches/improvements.patch
+	git apply --directory=db_generator ../patches/improvements_ipv6.patch
+	#git apply --directory=db_generator ../patches/ipv6.patch
+	#git apply --directory=db_generator ../patches/improvements.patch
 
 	# Patching PortList (extension of preallocated array is necessary)
 	# Raise limit of L5 rules from 200 to 20000.
